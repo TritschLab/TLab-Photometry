@@ -1,4 +1,4 @@
-# TLab-FP-Analysis
+# TLab-Photometry
 
 ******************************
 DISCLAIMER: 
