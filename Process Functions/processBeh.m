@@ -23,7 +23,7 @@ for n = 1:nAcq
     data.final(n).Fs = Fs;
     vel = getVel(wheel,radius,Fs,winSize);
     minRest = params.beh.minRestTime * Fs; minRun = params.beh.minRunTime * Fs;
-    [onsets,offsets] = getOnsetOffset(vel,velThres,minRest,minRun,finalOnset);
+    [onsets,offsets] = getOnsetOffset(abs(vel),velThres,minRest,minRun,finalOnset);
     data.final(n).vel = vel;
     data.final(n).beh.onsets = onsets;
     data.final(n).beh.offsets = offsets;
