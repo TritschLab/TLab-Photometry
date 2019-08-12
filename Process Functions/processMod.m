@@ -65,6 +65,16 @@ for n = 1:nAcq
         data.final(n).demod{x} = demod;
         data.final(n).FP{x} = FP;
         data.final(n).FPbaseline{x} = baseline;
+        if ~isexist(data.final(n),'time')
+            L = size(FP,1);
+            if dsRate ~= 0
+                L = L/dsRate;
+                Fs = Fs/dsRate;
+            end
+            timeVec = [1:L]/Fs;
+            data.final(n).time = timeVec';
+        end
+            
     end
     if isfield(data.acq(n),'control')
         nControl = length(data.acq(n).control);
@@ -90,6 +100,7 @@ for n = 1:nAcq
         wheel = wheel((sigEdge*Fs)+1:end-(sigEdge*Fs));
         data.acq(n).wheel = wheel;
     end
+    
 end
 
 end
