@@ -63,6 +63,12 @@ params.beh.velThres_rest = 2;
 params.beh.timeThres_rest = 4;
 params.beh.timeShift_rest = 0.5;
 
+%% Peak Analysis
+params.peaks.minHeight = 0.4;
+params.peaks.minProminence = 0.4;
+params.peaks.smoothWin = 2;
+%params.troughs.minHeight = 0.4;
+%params.troughs.minProminence = 0.4;
 
 %% Cross-Correlations
 params.cc.lag = 1;

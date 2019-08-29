@@ -28,7 +28,7 @@ function data = processOnsetOffset(data,params)
         vel = data.final(n).vel; vel = abs(vel);
         onSetsInd = data.final(n).beh.onsets; offSetsInd = data.final(n).beh.offsets;
         [onSetsInd,offSetsInd] = adjOnsetOffset(onSetsInd,offSetsInd,timeThres,vel);
-        tmpThres = 2*std(vel(offSetsInd(1)+round(Fs):offSetsInd(1)+3*round(Fs)));
+        tmpThres = 2*std(vel(onSetsInd(1)+round(Fs):offSetsInd(1)+3*round(Fs)));
         onSetsInd = iterToMin(vel,onSetsInd,tmpThres,1); offSetsInd = iterToMin(vel,offSetsInd,tmpThres,0);
         [onSetsInd,offSetsInd] = adjOnsetOffset(onSetsInd,offSetsInd,timeThres,vel);
         FP = data.final(n).FP;

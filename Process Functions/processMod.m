@@ -65,7 +65,7 @@ for n = 1:nAcq
         data.final(n).demod{x} = demod;
         data.final(n).FP{x} = FP;
         data.final(n).FPbaseline{x} = baseline;
-        if ~isexist(data.final(n),'time')
+        if ~isfield(data.final(n),'time')
             L = size(FP,1);
             if dsRate ~= 0
                 L = L/dsRate;
