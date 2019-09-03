@@ -20,6 +20,8 @@ function data = processOnsetOffset(data,params)
 %   Author: Pratik Mistry, 2019
 %
     nAcq = length(data.acq);
+    iterSTD = params.beh.iterSTD;
+    iterWin = params.beh.iterWin;
     for n = 1:nAcq
         Fs = data.final(n).Fs;
         timeAfter = params.beh.timeAfter * Fs;
@@ -28,8 +30,9 @@ function data = processOnsetOffset(data,params)
         vel = data.final(n).vel; vel = abs(vel);
         onSetsInd = data.final(n).beh.onsets; offSetsInd = data.final(n).beh.offsets;
         [onSetsInd,offSetsInd] = adjOnsetOffset(onSetsInd,offSetsInd,timeThres,vel);
-        tmpThres = 2*std(vel(onSetsInd(1)+round(Fs):offSetsInd(1)+3*round(Fs)));
-        onSetsInd = iterToMin(vel,onSetsInd,tmpThres,1); offSetsInd = iterToMin(vel,offSetsInd,tmpThres,0);
+        onsetThres = getIterThres(vel,onSetsInd,iterWin,Fs,iterSTD,0);
+        offsetThres = getIterThres(vel,offSetsInd,iterWin,Fs,iterSTD,1);
+        onSetsInd = iterToMin(vel,onSetsInd,onsetThres,1); offSetsInd = iterToMin(vel,offSetsInd,offsetThres,0);
         [onSetsInd,offSetsInd] = adjOnsetOffset(onSetsInd,offSetsInd,timeThres,vel);
         FP = data.final(n).FP;
         data.final(n).beh.mat = getOnsetOffsetMat(FP,Fs,vel,timeAfter,timeBefore,onSetsInd,offSetsInd);
@@ -116,4 +119,16 @@ mat = struct;
     mat.behOnsetToOffset =  behOnsetToOffset;
     mat.onsetToOffsetTime =  onsetToOffsetTime;
     mat.time = (-ceil(timeBefore*fRatio):ceil(timeAfter*fRatio))/Fs;
+end
+
+function thresVec = getIterThres(vel,indVec,winSize,Fs,nStd,flag)
+    if flag == 0
+        for n = 1:length(indVec)
+            thresVec(n) = nStd*std(vel(indVec(n)-winSize*Fs:indVec(n)));
+        end
+    else
+        for n = 1:length(indVec)
+            thresVec(n) = nStd*std(vel(indVec(n):indVec(n)+winSize*Fs));
+        end
+    end
 end
