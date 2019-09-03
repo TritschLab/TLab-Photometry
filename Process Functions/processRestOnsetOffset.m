@@ -32,6 +32,7 @@ function data = processRestOnsetOffset(data,params)
         timeThres = params.beh.timeThres_rest *Fs; timeShift = timeShift*Fs;
         [onsetInd,offsetInd] = getOnsetOffset(-vel,-velThres,minRunTime,minRestTime,1);
         [onsetInd,offsetInd] = adjOnsetOffset(onsetInd,offsetInd,timeThres,vel);
+        onsetInd = onsetInd+timeShift; offsetInd = offsetInd-timeShift;
         data.final(n).beh.onsetsRest = onsetInd;
         data.final(n).beh.offsetsRest = offsetInd;
     end

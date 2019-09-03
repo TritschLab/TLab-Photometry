@@ -55,7 +55,8 @@ params.beh.finalOnset = 0; %Boolean value -- Decides if you want to include or e
 params.beh.timeThres = 4; %Make sure a bout is above a certain time-length
 params.beh.timeBefore = 4; %Time to display preceding movement onset and offset
 params.beh.timeAfter = 4; %Time to display following movement onset and offset
-
+params.beh.iterSTD = 0.5; %Minimum iteration std value
+params.beh.iterWin = 3; %Window size used to find minimum iteration value
 %Rest Onset and Offset Parameters
 params.beh.minRestTime_rest = 4;
 params.beh.minRunTime_rest = 1;
