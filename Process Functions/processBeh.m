@@ -5,13 +5,12 @@ winSize = params.beh.winSize;
 finalOnset = params.beh.finalOnset;
 nAcq = length(data.acq);
 for n = 1:nAcq
-    if (isfield(data.final(n),'wheel'))
-        if (~isempty(data.final(n).wheel))
-            wheel = data.final(n).wheel;
-        else
+    try
+        wheel = data.final(n).wheel;
+        if (isempty(wheel))
             wheel = data.acq(n).wheel;
         end
-    else
+    catch
         wheel = data.acq(n).wheel;
     end
     Fs = data.acq(n).Fs;
