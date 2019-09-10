@@ -6,12 +6,12 @@ finalOnset = params.beh.finalOnset;
 nAcq = length(data.acq);
 for n = 1:nAcq
     try
-        wheel = data.final(n).wheel;
+        wheel = data.final(n).wheel{1};
         if (isempty(wheel))
-            wheel = data.acq(n).wheel;
+            wheel = data.acq(n).wheel{1};
         end
     catch
-        wheel = data.acq(n).wheel;
+        wheel = data.acq(n).wheel{1};
     end
     Fs = data.acq(n).Fs;
     if params.dsRate ~= 0

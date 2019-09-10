@@ -1,10 +1,10 @@
 function [cleanSignal,filt,varargout] = filterFP(rawSignal,sampleRate,cutoff,order,filtType,varargin)
-%filtFP - Filter raw photometry signals
+%filterFP - Filter raw photometry signals
 %   Created By: Pratik Mistry
 %   Created On: 24 August 2018
 %
-%   [cleanSignal,filt] = filtFP(rawSignal,sampleRate,cutoff,order,filtType)
-%   [cleanSignal,filt,adjustedSamplingRate] = filtFP(rawSignal,sampleRate,cutoff,order,filtType,downsamplefactor)
+%   [cleanSignal,filt] = filterFP(rawSignal,sampleRate,cutoff,order,filtType)
+%   [cleanSignal,filt,adjustedSamplingRate] = filterFP(rawSignal,sampleRate,cutoff,order,filtType,downsamplefactor)
 %
 %   Description: This function allows the user to implement a lowpass or
 %   highpass butterworth filter. A butterworth filter was choosen because the passband and stopband are
