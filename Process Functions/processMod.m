@@ -96,9 +96,9 @@ for n = 1:nAcq
         end
     end
     if (params.wheelStatus == 1) && (sigEdge ~= 0)
-        wheel = data.acq(n).wheel{1};;
+        wheel = data.acq(n).wheel;
         wheel = wheel((sigEdge*Fs)+1:end-(sigEdge*Fs));
-        data.acq(n).wheel{1} = wheel;
+        data.acq(n).wheel = wheel;
     end
     
 end

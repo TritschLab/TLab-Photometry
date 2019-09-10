@@ -49,7 +49,7 @@ function [data] = createFPStruct(wsData,animalName,expDate)
             end
         end
         if (~isempty(wheelInd))
-            data.acq(sweepNum).wheel{1} = wsData.sweeps(sweepNum).acqData(:,wheelInd);
+            data.acq(sweepNum).wheel = wsData.sweeps(sweepNum).acqData(:,wheelInd);
         end
         if (~isempty(refSigInd))
             data.acq(sweepNum).refSig = cell(length(refSigInd),1);
@@ -62,7 +62,7 @@ function [data] = createFPStruct(wsData,animalName,expDate)
             end
         end
         if (~isempty(pulseInd))
-            data.acq(sweepNum).opto{1} = wsData.sweeps(sweepNum).acqData(:,pulseInd);
+            data.acq(sweepNum).opto = wsData.sweeps(sweepNum).acqData(:,pulseInd);
         end
         if (~isempty(controlInd))
             data.acq(sweepNum).control = cell(length(controlInd),1);
