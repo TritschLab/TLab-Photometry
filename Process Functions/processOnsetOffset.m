@@ -34,12 +34,14 @@ function data = processOnsetOffset(data,params)
         offsetThres = getIterThres(vel,offSetsInd,iterWin,Fs,iterSTD,1);
         onSetsInd = iterToMin(vel,onSetsInd,onsetThres,1); offSetsInd = iterToMin(vel,offSetsInd,offsetThres,0);
         [onSetsInd,offSetsInd] = adjOnsetOffset(onSetsInd,offSetsInd,timeThres,vel);
-        FP = data.final(n).FP;
-        data.final(n).beh.mat = getOnsetOffsetMat(FP,Fs,vel,timeAfter,timeBefore,onSetsInd,offSetsInd);
         data.final(n).beh.onsets = onSetsInd; data.final(n).beh.offsets = offSetsInd;
         data.final(n).beh.numBouts = length(onSetsInd);
         data.final(n).beh.avgBoutDuration = mean(offSetsInd - onSetsInd)/Fs;
         data.final(n).beh.stdBoutDuration = std(offSetsInd - onSetsInd)/Fs;
+        if isfield(data.final(n),'FP')
+            FP = data.final(n).FP;
+            data.final(n).beh.mat = getOnsetOffsetMat(FP,Fs,vel,timeAfter,timeBefore,onSetsInd,offSetsInd);
+        end
     end
 end
 

@@ -3,8 +3,8 @@ function [dF,baseline] = baselineFP(FP,interpType,fitType,basePrc,winSize,winOv,
 %
 %   [dF_F,varargout] = baselineFP(FP,interpType,fitType,basePrc,winSize,winOv,Fs)
 %
-%   Description: This code will baseline adjust the photometry signal
-%   using a two term exponential or a linear interpolation
+%   Description: This code will baseline adjust the photometry signal using
+%   a moving window and finding values within a specified percentile
 %
 %   Input:
 %   - FP - Photometry signal to baseline

@@ -94,7 +94,8 @@ function [FPind,wheelInd,refSigInd,pulseInd,controlInd] = parseTraceNames(traceN
     for n = 1:length(traceNames)
         tmpName = traceNames{n};
         if (strncmp(tmpName,'ACh',3)==1) || (strncmp(tmpName,'DA',2)==1) || (strncmp(tmpName,'DAsensor',7)==1) ...
-                || (strncmp(tmpName,'DASensor',7)==1) || (strncmp(tmpName,'FP',2)==1) || (strncmp(tmpName,'GCaMP',5)==1)
+                || (strncmp(tmpName,'DASensor',7)==1) || (strncmp(tmpName,'FP',2)==1) || (strncmp(tmpName,'GCaMP',5)==1) ...
+                || (strncmp(tmpName,'GABA',4)==1)
             FPind = [FPind,n];
         elseif (strncmp(tmpName,'Wheel',5)==1)
             wheelInd = n;

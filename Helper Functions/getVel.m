@@ -25,7 +25,9 @@ function vel = getVel(rawData,radius,Fs,winSize)
     rawNorm = rawNorm / max(rawNorm);
     
     unwrapped = unwrapBeh(rawNorm); %Unwrap the data using the unwrapBeh function written by Jeff
-    unwrapped = movmean(unwrapped,ceil(Fs*winSize));
+    if winSize ~= 0
+        unwrapped = movmean(unwrapped,ceil(Fs*winSize));
+    end
     unwrapped = unwrapped * circumference;
     %distance = unwrapped * dia; %Multiply the cumulative rotaions by the circumference to
     % get distance traveled
