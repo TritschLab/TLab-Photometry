@@ -3,6 +3,9 @@
 %{
  for this analysis you need several packags including Pratiks tool box
  the dependencies are:
+ https://github.com/HaixinLiuNeuro/Wavesurfer
+ https://github.com/HaixinLiuNeuro/Functions_fromMATLABcentral
+ https://github.com/HaixinLiuNeuro/TLab-Photometry
  
 %}
 

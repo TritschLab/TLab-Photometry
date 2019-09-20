@@ -19,7 +19,7 @@
 function  [df_F_ds, ts_ds, df_F, F_baseline, FP_filter] = HL_FP_df_cw (rawFP, ts, rawFs, system_baseline, ...
                                                                         lpCut, filtOrder, interpType, fitType, winSize, winOv, basePrc)
 %% default params
-params.FP.lpCut = 50; % Cut-off frequency for filter
+params.FP.lpCut = 10; % Cut-off frequency for filter
 params.FP.filtOrder = 10; % Order of the filter
 params.FP.interpType = 'linear'; % 'linear' 'spline' 
 params.FP.fitType = 'interp'; % Fit method 'interp' , 'exp' , 'line'
