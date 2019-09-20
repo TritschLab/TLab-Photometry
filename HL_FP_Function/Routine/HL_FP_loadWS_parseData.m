@@ -19,7 +19,7 @@ add in module to read in digital input
 
 %% 
 function [DATA] = HL_FP_loadWS_parseData(fn)
-
+warning('This function currently only deal with single sweep/continuous recording')
 % Use WS package to read in
 disp('Reading WS file ...')
 tic
@@ -44,7 +44,8 @@ DATA.StiLib = s.header.StimulusLibrary;
 temp_fieldn = fieldnames(s);
 temp_idx = find(cellfun(@(x) ~isempty(strfind(x, 'sweep')), temp_fieldn));
 
-if length(temp_idx) > 1
+if length(temp_idx) > 1 % for now dealing with single sweep session: continues recording
+    help HL_FP_loadWS_parseData
    error('multiple sweeps!!!')
 end
 DATA.ch_data = s.(temp_fieldn{temp_idx}).analogScans; % data points x channel 

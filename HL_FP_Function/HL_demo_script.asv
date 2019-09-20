@@ -1,0 +1,34 @@
+%script demo: to analyze one recording session with multiple stimulus types
+Data_root = 'R:\tritsn01lab\tritsn01labspace\Haixin\Data';
+
+ii = 1;
+WS_fn{ii} =          fullfile(Data_root, '190828\HL071\WS\HL071_190828_CSti_DLSfp_470LED_0001.h5');
+WS_fn_baseline{ii} = fullfile(Data_root, '190828\HL071\WS\HL071_190828_CSti_DLSfp_470LED_baseline_0001.h5');
+
+[Info, Result, WS_data] = HL_FP_Process_Stim_CW(WS_fn{ii}, WS_fn_baseline{ii});
+
+[Trial_FP, FP_x_plot] = HL_FP_Format2Trial(Result.df_F_ds, Result.ts_ds, Result.Stim_ts);
+
+% plot result
+n_type = length( Result.trial_type );
+color_vec = varycolor(n_type);
+figure; 
+subplot(2,1,1); hold on;
+for i_type = 1:n_type
+    plot_jbfill_mean_se(Trial_FP( Result.idx_byTrialType.(Result.trial_type{i_type}), : ), ...
+        Result.FP_x_plot, color_vec(i_type,:));
+
+end
+title({'DLS DA 15s baseline moving window'; ...
+    file_temp});
+xlim(x_show)
+subplot(2,1,2);hold on;
+for i_type = 1:n_type
+    plot_jbfill_mean_se(Result.Trial_FP_1m( Result.idx_byTrialType.(Result.trial_type{i_type}), : ), ...
+        Result.FP_x_plot, color_vec(i_type,:));
+
+end
+title('1m baseline')
+xlabel('Time (s) Stim ON t=0')
+
+xlim(x_show)

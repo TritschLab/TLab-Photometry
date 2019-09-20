@@ -1,0 +1,28 @@
+% [Trial_FP, FP_x_plot] = HL_FP_Format2Trial(df_F_ds, ts_ds, Stim_ts, FP_trial_window_length, FP_trial_window_start) 
+% to format session FP data into trial structure according to Stimulus time
+%   IP
+% 
+%
+%
+% Haixin Liu 2019-9
+%%
+function [Trial_FP, FP_x_plot] = HL_FP_Format2Trial(df_F_ds, ts_ds, Stim_ts, FP_trial_window_length, FP_trial_window_start) 
+
+if nargin < 4
+FP_trial_window_length = 6;
+FP_trial_window_start = -4;
+elseif nargin >=4 && nargin < 6
+    help HL_FP_Format2Trial
+    error('Input number not match criteria')
+end
+
+df_sr = median(diff(ts_ds));% sampling rate in processed df
+trial_window =[ 1:round(FP_trial_window_length/df_sr)] + round(FP_trial_window_start/df_sr);  %50Hz 2s => 100 data points
+
+FP_x_plot = [0:1:(length(trial_window)-1)]*df_sr+FP_trial_window_start;
+
+Trial_FP = zeros(size(Stim_ts,1), length(trial_window));
+for ii = 1:size(Stim_ts,1)
+     [frame_idx] = HL_getFrameIdx(ts_ds, Stim_ts(ii,1));
+    Trial_FP(ii,:) = df_F_15s(frame_idx+trial_window);
+end
