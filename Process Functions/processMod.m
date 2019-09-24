@@ -45,37 +45,9 @@ for n = 1:nAcq
     FPnames = data.acq(n).FPnames;
     refSig = data.acq(n).refSig;
     data.final(n).FP = cell(nFP,1);
-    data.final(n).demod = cell(nFP,1);
+    data.final(n).nbFP = cell(nFP,1);
     data.final(n).FPbaseline = cell(nFP,1);
-    for x = 1:nFP
-        rawFP = data.acq(n).FP{x};
-        modFreq = inputdlg(['Enter Modulation Frequency for: ',FPnames{x}]);
-        modFreq = str2double(modFreq);
-        ref = findRef(modFreq,refSig,Fs);
-        demod = digitalLIA(rawFP,ref,Fs,lpCut,filtOrder);
-        if sigEdge ~= 0
-            demod = demod((sigEdge*Fs)+1:end-(sigEdge*Fs));
-        end
-        [FP,baseline] = baselineFP(demod,interpType,fitType,basePrc,winSize,winOv,Fs);
-        if dsRate ~= 0
-            FP = downsample(FP,dsRate);
-            demod = downsample(demod,dsRate);
-            baseline = downsample(baseline,dsRate);
-        end
-        data.final(n).demod{x} = demod;
-        data.final(n).FP{x} = FP;
-        data.final(n).FPbaseline{x} = baseline;
-        if ~isfield(data.final(n),'time')
-            L = size(FP,1);
-            if dsRate ~= 0
-                L = L/dsRate;
-                Fs = Fs/dsRate;
-            end
-            timeVec = [1:L]/Fs;
-            data.final(n).time = timeVec';
-        end
-            
-    end
+    contBaseline = 0;
     if isfield(data.acq(n),'control')
         nControl = length(data.acq(n).control);
         controlNames = data.acq(n).controlNames;
@@ -94,15 +66,45 @@ for n = 1:nAcq
             end
             data.final(n).control{x} = demodCont;
         end
+        contBaseline = 1;
     end
-    if (params.wheelStatus == 1) && (sigEdge ~= 0)
+    for x = 1:nFP
+        rawFP = data.acq(n).FP{x};
+        modFreq = inputdlg(['Enter Modulation Frequency for: ',FPnames{x}]);
+        modFreq = str2double(modFreq);
+        ref = findRef(modFreq,refSig,Fs);
+        demod = digitalLIA(rawFP,ref,Fs,lpCut,filtOrder);
+        if sigEdge ~= 0
+            demod = demod((sigEdge*Fs)+1:end-(sigEdge*Fs));
+        end
+        
+        [FP,baseline] = baselineFP(demod,interpType,fitType,basePrc,winSize,winOv,Fs);
+        if dsRate ~= 0
+            FP = downsample(FP,dsRate);
+            demod = downsample(demod,dsRate);
+            baseline = downsample(baseline,dsRate);
+        end
+        data.final(n).nbFP{x} = demod;
+        data.final(n).FP{x} = FP;
+        data.final(n).FPbaseline{x} = baseline;
+        if ~isfield(data.final(n),'time')
+            L = size(FP,1);
+            if dsRate ~= 0
+                L = L/dsRate;
+                Fs = Fs/dsRate;
+            end
+            timeVec = [1:L]/Fs;
+            data.final(n).time = timeVec';
+        end
+        
+    end
+    wheelStatus = menu('Do you need to truncate wheel data?','Yes','No');
+    if (wheelStatus == 1)
         wheel = data.acq(n).wheel;
         wheel = wheel((sigEdge*Fs)+1:end-(sigEdge*Fs));
         data.acq(n).wheel = wheel;
     end
-    
 end
-
 end
 
 function [ref] = findRef(modFreq,refSig,Fs)

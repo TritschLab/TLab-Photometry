@@ -10,26 +10,25 @@
 %
 %
 %% Select Data to Analyze
-params.statusFP = 1;
-params.statusWheel = 1;
-params.statusOnsets = 1;
-params.statusOpto = 1;
-params.statusCC = 1;
+%params.statusFP = 1;
+%params.statusWheel = 1;
+%params.statusOnsets = 1;
+%params.statusOpto = 1;
+%params.statusCC = 1;
 %% General Parameters
-params.dsRate = 0; % Downsampling rate if you want to downsample the signal
+params.dsRate = 50; % Downsampling rate if you want to downsample the signal
 %This dsRate will also be applied to all signals during the analysis
 %pipeline
+%dsRate = 1 if you do not want to downsample
 
 %% Demodulation Parameters
 %Adjust the demodStatus variable to "1" if you need to demodulate a signal
 %from a lock-in amplifier or "0" if it's a normal photometry recording
 
-params.FP.demodStatus = 0; % **1 -- Demodulation** **0 -- No Demodulation**
-if params.FP.demodStatus == 1
-    params.FP.sigEdge = 60; %Time in seconds of data to be removed from beginning and end of signal
-    %The params.sigEdge variable is necessary because it will remove filter
-    %edge effects that occur during the demodulation
-end
+
+params.FP.sigEdge = 5; %Time in seconds of data to be removed from beginning and end of signal
+%The params.sigEdge variable is necessary because it will remove filter
+%edge effects that occur during the demodulation
 
 %% Filter Parameters
 %params.filtType = 'lowpass'; % Filter type: 'lowpass' or 'highpass' --

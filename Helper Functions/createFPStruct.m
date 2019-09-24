@@ -95,13 +95,12 @@ function [FPind,wheelInd,refSigInd,pulseInd,controlInd] = parseTraceNames(traceN
         tmpName = traceNames{n};
         if (strncmp(tmpName,'ACh',3)==1) || (strncmp(tmpName,'DA',2)==1) || (strncmp(tmpName,'DAsensor',7)==1) ...
                 || (strncmp(tmpName,'DASensor',7)==1) || (strncmp(tmpName,'FP',2)==1) || (strncmp(tmpName,'GCaMP',5)==1) ...
-                || (strncmp(tmpName,'GABA',4)==1)
+                || (strncmp(tmpName,'GABA',4)==1) || (strncmp(tmpName,'Control',5)==1) || (strncmp(tmpName,'Red',3)==1)
             FPind = [FPind,n];
-        elseif (strncmp(tmpName,'Wheel',5)==1)
+        elseif (strncmp(tmpName,'Wheel',5)==1) || (strncmp(tmpName,'wheel',5)==1)
             wheelInd = n;
-        elseif (strncmp(tmpName,'Control',5)==1) || (strncmp(tmpName,'Red',3)==1) || (strncmp(tmpName,'Isosbestic',8)==1)
-            controlInd = [controlInd,n];
-        elseif (strncmp(tmpName,'Ref',3)==1) || (strncmp(tmpName,'refSig',6)==1)
+        elseif (strncmp(tmpName,'Ref',3)==1) || (strncmp(tmpName,'refSig',6)==1) ...
+                || (strncmp(tmpName,'ref',3)==1)
             refSigInd = [refSigInd,n];
         elseif (strncmp(tmpName,'Pulse',5)==1) || (strncmp(tmpName,'rawPulse',8)==1) ...
                 || (strncmp(tmpName,'Opto',4)==1)

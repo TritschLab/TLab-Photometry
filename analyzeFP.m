@@ -1,13 +1,3 @@
-%% Analyze Fiber Photometry and Behavioral Data
-
-%Description: This function performs Fiber Photometry Analysis,
-%Wheel Position-to-Velocity conversions, Adjustment of Movement Bouts, Processing of
-%Optogenetic pulses, and cross-correlations of velocity and photometry
-%
-%
-%
-%Author: Pratik Mistry, 2019
-
 [FPfiles,FPpath] = uigetfile('*.mat','Select FP Files to Analyze','MultiSelect','On');
 if FPfiles == 0
     errordlg('No Photometry File Selected!');
@@ -21,77 +11,62 @@ else
             FPfiles = {FPfiles};
         end
         nFiles = length(FPfiles);
-        while(1)
-            choice = menu('Select an Analysis Option','Photometry','Velocity','Onset/Offset','Optogenetics','Cross-Correlation');
-            switch choice
-                case 0
-                    msgbox('Analysis Ended');
-                    break;                    
-                case 1
-                    for n = 1:nFiles
-                        load(fullfile(FPpath,FPfiles{n}));
-                        modStatus = menu('Are you demodulating a signal?','Yes','No');
-                        if modStatus == 1
-                          data = processMod(data,params);
-                        else
-                          data = processFP(data,params);
-                        end
-                        if ~isfield(data,'params')
-                            data.params = params;
-                        end
-                        save(fullfile(FPpath,FPfiles{n}),'data');
+        [analysisOpt,ind] = listdlg('PromptString',{'Select All Analyzes to Perform',...
+            'For Multiple Methods: Hold Ctrl and Select'},'ListString',{'Photometry',...
+            'Velocity','Onset/Offset','Cross-Correlations','Optogenetics'});
+        if ind == 0
+            msgbox('Analysis Aborted');
+        else
+            for x = 1:nFiles
+                load(fullfile(FPpath,FPfiles{x}));
+                data.params = params;
+                for y = 1:length(analysisOpt)
+                    choice = analysisOpt(y);
+                    switch choice
+                        case 1
+                            modStatus = menu('Are you demodulating a signal?','Yes','No');
+                            if modStatus == 1
+                                isoStatus = menu(['Does this experiment: ',FPfiles{y},...
+                                    ' contain an Isosbestic Control?'],'Yes','No');
+                                if isoStatus == 1
+                                    data = processIso(data,params);
+                                else
+                                    data = processDual(data,params);
+                                end
+                            elseif modStatus == 0
+                                data = processFP(data,params);
+                            else
+                                errordlg('No Valid Photometry Option Selected');
+                            end
+                        case 2
+                            data = processBeh(data,params);
+                        case 3
+                            try
+                                data = processOnsetOffset(data,params);
+                            catch
+                                errordlg(['Error Processing Onset/Offset for file: ',FPfiles{n}]);
+                            end
+                            try
+                                data = processRestOnsetOffset(data,params);
+                            catch
+                                errordlg(['Error Processing Rest Onset/Offset for file: ',FPfiles{n}]);
+                            end
+                        case 4
+                            try
+                                data = processCC(data,params);
+                            catch
+                                errordlg(['Error Processing Cross Correlation for file: ',FPfiles{n}]);
+                            end
+                        case 5
+                            load(fullfile(FPpath,FPfiles{n}));
+                            try
+                                data = processOpto(data,params);
+                            catch
+                                errordlg(['Error Processing Optogenetic Pulses for file: ',FPfiles{n}]);
+                            end
                     end
-                case 2
-                    for n = 1:nFiles
-                        load(fullfile(FPpath,FPfiles{n}));
-                        data = processBeh(data,params);
-                    end
-                    data.params = params;
-                    save(fullfile(FPpath,FPfiles{n}),'data');
-                case 3
-                    for n = 1:nFiles
-                        load(fullfile(FPpath,FPfiles{n}));
-                        try
-                            data = processOnsetOffset(data,params);
-                        catch
-                            errordlg(['Error Processing Onset/Offset\n','Change Parameters for file: ',FPfiles{n}]);
-                        end
-                        try
-                            data = processRestOnsetOffset(data,params);
-                        catch
-                            errordlg(['Error Processing Rest Onset/Offset\n','Change Parameters for file: ',FPfiles{n}]);
-                        end
-                    end
-                    if ~isfield(data,'params')
-                        data.params = params;
-                    end
-                    save(fullfile(FPpath,FPfiles{n}),'data');
-                case 4
-                    for n = 1:nFiles
-                        load(fullfile(FPpath,FPfiles{n}));
-                        try
-                            data = processOpto(data,params);
-                        catch
-                            errordlg(['Error Processing Optogenetic Pulses','Change Parameters for file: ',FPfiles{n}]);
-                        end
-                    end
-                    if ~isfield(data,'params')
-                        data.params = params;
-                    end
-                    save(fullfile(FPpath,FPfiles{n}),'data');
-                case 5
-                    for n = 1:nFiles
-                        load(fullfile(FPpath,FPfiles{n}));
-                        try
-                            data = processCC(data,params);
-                        catch
-                            errordlg(['Error Processing Cross Correlation','Change Parameters for file: ',FPfiles{n}]);
-                        end
-                    end
-                    if ~isfield(data,'params')
-                        data.params = params;
-                    end
-                    save(fullfile(FPpath,FPfiles{n}),'data');
+                end
+                save(fullfile(FPpath,FPfiles{x}),'data');
             end
         end
     end

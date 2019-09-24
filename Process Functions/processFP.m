@@ -33,28 +33,26 @@ basePrc = params.FP.basePrc;
 
 for n = 1:nAcq
     L = size(data.acq(n).time,1);
-    rawFs = data.acq(n).Fs;
-    Fs = rawFs;
+    Fs = data.acq(n).Fs;
     nFP = data.acq(n).nFPchan;
     data.final(n).FP = cell(nFP,1);
     data.final(n).nbFP = cell(nFP,1);
     data.final(n).FPbaseline = cell(nFP,1);
+    if dsRate ~= 0
+        Fs = Fs/dsRate;
+        L = L/dsRate;
+    end    
     for x = 1:nFP
         rawFP = data.acq(n).FP{x};
+        if dsRate ~= 0
+            rawFP = downsample(rawFP,dsRate);
+            Fs = Fs/dsRate;
+        end
         nbFP = filterFP(rawFP,rawFs,lpCut,filtOrder,'lowpass');
         [FP,baseline] = baselineFP(nbFP,interpType,fitType,basePrc,winSize,winOv,Fs);
-        if dsRate ~= 0
-            FP = downsample(FP,dsRate);
-            nbFP = downsample(nbFP,dsRate);
-            baseline = downsample(baseline,dsRate);
-        end
         data.final(n).FP{x} = FP;
         data.final(n).nbFP{x} = nbFP;
         data.final(n).FPbaseline{x} = baseline;
-    end
-    if dsRate~= 0
-        Fs = Fs/dsRate;
-        L = size(downsample(data.acq(n).time,1),1);
     end
     data.final(n).Fs = Fs;
     timeVec = [1:L]/Fs;
