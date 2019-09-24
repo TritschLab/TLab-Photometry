@@ -22,11 +22,8 @@ params.dsRate = 50; % Downsampling rate if you want to downsample the signal
 %dsRate = 1 if you do not want to downsample
 
 %% Demodulation Parameters
-%Adjust the demodStatus variable to "1" if you need to demodulate a signal
-%from a lock-in amplifier or "0" if it's a normal photometry recording
-
-
-params.FP.sigEdge = 5; %Time in seconds of data to be removed from beginning and end of signal
+%Adjust the variable to "0" if it's a normal photometry recording
+params.FP.sigEdge = 0; %Time in seconds of data to be removed from beginning and end of signal
 %The params.sigEdge variable is necessary because it will remove filter
 %edge effects that occur during the demodulation
 
@@ -35,19 +32,19 @@ params.FP.sigEdge = 5; %Time in seconds of data to be removed from beginning and
 %Temporarily removed. We more than likely won't need to highpass filter our
 %signals
 params.FP.lpCut = 10; % Cut-off frequency for filter
-params.FP.filtOrder = 10; % Order of the filter
+params.FP.filtOrder = 8; % Order of the filter
 
 %% Baseline Parameters
 params.FP.basePrc = 10; % Percentile value from 1 - 100 to use when finding baseline points
 params.FP.winSize = 10; % Window size for baselining in seconds
 params.FP.winOv = 0; %Window overlap size in seconds
 params.FP.interpType = 'linear'; % 'linear' 'spline' 
-params.FP.fitType = 'interp'; % Fit method 'interp' , 'exp' , 'line'
+params.FP.fitType = 'line'; % Fit method 'interp' , 'exp' , 'line'
 
 %% Behavior Parameters Parameters
 %Wheel Parameters
 params.beh.radius = 9.8; %Radius of the wheel used. Note it can be meters or centimeters. Just keep track of your units
-params.beh.winSize = 0.5; %This is the window size for the moving median filter applied to unwrapped encoder data 500ms windows work well
+params.beh.winSize = 0.5; %This is the window size for the moving avg filter applied to unwrapped encoder data 500ms windows work well
 %Onset/Offset Parameters
 %Movement Onset and Offset Parameters
 params.beh.velThres = 0.01; %(same units as radius)/s
@@ -56,8 +53,8 @@ params.beh.minRestTime = 2; %Threshold for minimum time spent rest for movement 
 params.beh.finalOnset = 0; %Boolean value -- Decides if you want to include or exlcude the final 
 % onset if the acquisition ends before the offset
 params.beh.timeThres = 3; %Make sure a bout is above a certain time-length
-params.beh.timeBefore = 4; %Time to display preceding movement onset and offset
-params.beh.timeAfter = 4; %Time to display following movement onset and offset
+params.beh.timeBefore = 2; %Time to display preceding movement onset and offset
+params.beh.timeAfter = 2; %Time to display following movement onset and offset
 params.beh.iterSTD = 0.5; %Minimum iteration std value
 params.beh.iterWin = 3; %Window size used to find minimum iteration value
 %Rest Onset and Offset Parameters
@@ -75,7 +72,7 @@ params.peaks.smoothWin = 2;
 %params.troughs.minProminence = 0.4;
 
 %% Cross-Correlations
-params.cc.lag = 1;
+params.cc.lag = 1; %In seconds how much to shift forward and backwards
 params.cc.type = 1; % 1 = Cross-Correlation 2 - Cross-Covariance
 
 %% Opto-Pulse Analysis

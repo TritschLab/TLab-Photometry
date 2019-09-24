@@ -33,7 +33,7 @@ else
                                 else
                                     data = processDual(data,params);
                                 end
-                            elseif modStatus == 0
+                            elseif modStatus == 2
                                 data = processFP(data,params);
                             else
                                 errordlg('No Valid Photometry Option Selected');
@@ -44,25 +44,25 @@ else
                             try
                                 data = processOnsetOffset(data,params);
                             catch
-                                errordlg(['Error Processing Onset/Offset for file: ',FPfiles{n}]);
+                                errordlg(['Error Processing Onset/Offset for file: ',FPfiles{x}]);
                             end
                             try
                                 data = processRestOnsetOffset(data,params);
                             catch
-                                errordlg(['Error Processing Rest Onset/Offset for file: ',FPfiles{n}]);
+                                errordlg(['Error Processing Rest Onset/Offset for file: ',FPfiles{x}]);
                             end
                         case 4
                             try
                                 data = processCC(data,params);
                             catch
-                                errordlg(['Error Processing Cross Correlation for file: ',FPfiles{n}]);
+                                errordlg(['Error Processing Cross Correlation for file: ',FPfiles{x}]);
                             end
                         case 5
                             load(fullfile(FPpath,FPfiles{n}));
                             try
                                 data = processOpto(data,params);
                             catch
-                                errordlg(['Error Processing Optogenetic Pulses for file: ',FPfiles{n}]);
+                                errordlg(['Error Processing Optogenetic Pulses for file: ',FPfiles{x}]);
                             end
                     end
                 end
