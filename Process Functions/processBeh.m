@@ -22,20 +22,12 @@ radius = params.beh.radius; velThres = params.beh.velThres;
 winSize = params.beh.winSize;
 finalOnset = params.beh.finalOnset;
 nAcq = length(data.acq);
+dsRate = params.dsRate;
 for n = 1:nAcq
-    try
-        wheel = data.final(n).wheel;
-        if (isempty(wheel))
-            wheel = data.acq(n).wheel;
-        end
-    catch
-        wheel = data.acq(n).wheel;
-    end
-    Fs = data.acq(n).Fs;
-    if params.dsRate ~= 0
-       wheel = downsample(wheel,params.dsRate);
-       Fs = Fs/params.dsRate;
-    end
+    wheel = data.acq(n).wheel;
+    rawFs = data.acq(n).Fs;
+    Fs = rawFs/dsRate;
+    wheel = downsample(wheel,params.dsRate);
     data.final(n).wheel = wheel;
     data.final(n).Fs = Fs;
     vel = getVel(wheel,radius,Fs,winSize);

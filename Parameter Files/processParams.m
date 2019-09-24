@@ -39,7 +39,7 @@ params.FP.basePrc = 10; % Percentile value from 1 - 100 to use when finding base
 params.FP.winSize = 10; % Window size for baselining in seconds
 params.FP.winOv = 0; %Window overlap size in seconds
 params.FP.interpType = 'linear'; % 'linear' 'spline' 
-params.FP.fitType = 'line'; % Fit method 'interp' , 'exp' , 'line'
+params.FP.fitType = 'exp'; % Fit method 'interp' , 'exp' , 'line'
 
 %% Behavior Parameters Parameters
 %Wheel Parameters
@@ -47,7 +47,7 @@ params.beh.radius = 9.8; %Radius of the wheel used. Note it can be meters or cen
 params.beh.winSize = 0.5; %This is the window size for the moving avg filter applied to unwrapped encoder data 500ms windows work well
 %Onset/Offset Parameters
 %Movement Onset and Offset Parameters
-params.beh.velThres = 0.01; %(same units as radius)/s
+params.beh.velThres = 2; %(same units as radius)/s
 params.beh.minRunTime = 2; %Threshold for minimum time spent running for movement bouts (in seconds)
 params.beh.minRestTime = 2; %Threshold for minimum time spent rest for movement bout (in seconds)
 params.beh.finalOnset = 0; %Boolean value -- Decides if you want to include or exlcude the final 
@@ -58,7 +58,7 @@ params.beh.timeAfter = 2; %Time to display following movement onset and offset
 params.beh.iterSTD = 0.5; %Minimum iteration std value
 params.beh.iterWin = 3; %Window size used to find minimum iteration value
 %Rest Onset and Offset Parameters
-params.beh.minRestTime_rest = 4;
+params.beh.minRestTime_rest = 2;
 params.beh.minRunTime_rest = 1;
 params.beh.velThres_rest = 2;
 params.beh.timeThres_rest = 4;

@@ -1,3 +1,4 @@
+clear all;
 [FPfiles,FPpath] = uigetfile('*.mat','Select FP Files to Analyze','MultiSelect','On');
 if FPfiles == 0
     errordlg('No Photometry File Selected!');
@@ -68,6 +69,7 @@ else
                 end
                 save(fullfile(FPpath,FPfiles{x}),'data');
             end
+            clear all
         end
     end
 end

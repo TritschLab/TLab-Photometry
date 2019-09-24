@@ -20,17 +20,16 @@ function data = processRestOnsetOffset(data,params)
 %   Author: Pratik Mistry, 2019
 %
     velThres = params.beh.velThres_rest; 
-    minRunTime = params.beh.minRunTime_rest;
-    timeShift = params.beh.timeShift_rest;
-    
     nAcq = length(data.acq);
     
     for n = 1:nAcq
         vel = data.final(n).vel; vel = abs(vel);
         Fs = data.final(n).Fs;
         minRestTime = params.beh.minRestTime_rest*Fs;
-        timeThres = params.beh.timeThres_rest *Fs; timeShift = timeShift*Fs;
-        [onsetInd,offsetInd] = getOnsetOffset(-vel,-velThres,minRunTime,minRestTime,1);
+        timeThres = params.beh.timeThres_rest *Fs; 
+        timeShift = params.beh.timeShift_rest*Fs;
+        minRunTime = params.beh.minRunTime_rest * Fs;
+        [onsetInd,offsetInd] = getOnsetOffset(-vel',-velThres,minRunTime,minRestTime,1);
         [onsetInd,offsetInd] = adjOnsetOffset(onsetInd,offsetInd,timeThres,vel);
         onsetInd = onsetInd+timeShift; offsetInd = offsetInd-timeShift;
         data.final(n).beh.onsetsRest = onsetInd;

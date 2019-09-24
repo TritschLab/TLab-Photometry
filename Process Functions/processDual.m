@@ -36,6 +36,11 @@ for x = 1:nAcq
     L = L/dsRate; timeVec = [1:L]/Fs;
     data.final(x).time = timeVec';
     data.final(x).Fs = Fs;
+    if sigEdge ~= 0
+        wheel = data.acq(x).wheel;
+        wheel = wheel((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
+        data.acq(x).wheel = wheel;
+    end
 end
 end
 
