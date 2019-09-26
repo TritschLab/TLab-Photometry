@@ -6,7 +6,7 @@ function [onsetsFinal, offsetsFinal] = getOnsetOffset(signal, ampThreshold, minB
 % for a movement bout or a periodic mirror position.
 %
 % Inputs:
-% 
+%
 % 'signal' - the original, full data trace
 %
 % 'ampThreshold' - the minimum height of the signal to signify an onset
@@ -22,15 +22,15 @@ function [onsetsFinal, offsetsFinal] = getOnsetOffset(signal, ampThreshold, minB
 % bout, the final onset should be eliminated. A value of 'false' means that
 % even though the acquisition ends during a bout, the final point will be
 % considered an offset.
-% 
+%
 % Outputs:
-% 
+%
 % 'onsetsFinal' - the indices of the beginnings of periods of signal
 % increase.
-% 
+%
 % 'offsetsFinal' - the indices of the ends of periods of signal increase.
 %
-% Author: Jeffrey March, 2018 
+% Author: Jeffrey March, 2018
 
 aboveThresh = find(signal >= ampThreshold);
 onsets = cat(2,aboveThresh(1),aboveThresh(find(diff(aboveThresh) > minBelowTime) + 1));
@@ -50,5 +50,5 @@ if isnan(onsetsFinal(1))
     onsetsFinal(1)=[];
     offsetsFinal(1)=[];
 end
-    
+
 end

@@ -1,15 +1,40 @@
 function [data] = processIso(data,params)
+%Process Dual Color Photometry
+%
+%   [data] = processDual(data,params)
+%
+%   Description: This function is designed to process photometry
+%   experiments with an isosbestic control. The code takes the photometry
+%   channel and asks the user for the modulation frequencies of the
+%   excitation 470 and the isosbestic control 405
+%
+%   Input:
+%   - data - A data structure specific to the Tritsch Lab. Created using
+%   the convertH5_FP script
+%   - params - A structure created from a variant of the processParams
+%   script
+%
+%   Output:
+%   - data - Updated data structure containing processed data
+%
+%   Author: Pratik Mistry 2019
+
+%Pull parameters required for this analysis
 nAcq = length(data.acq);
+%Filter Properties
 lpCut = params.FP.lpCut; filtOrder = params.FP.filtOrder;
-
+%General downsampling parameter
 dsRate = params.dsRate;
-
+%Baselining parameters
 interpType = params.FP.interpType;
 fitType = params.FP.fitType; winSize = params.FP.winSize;
 winOv = params.FP.winOv;
 basePrc = params.FP.basePrc;
+%Demodulation-specific property
 sigEdge = params.FP.sigEdge;
 
+%This outer for-loop goes performs the analysis on each sweep acquired
+%during the experiment
 for x = 1:nAcq
     L = length(data.acq(x).time);
     nFP = length(data.acq(x).FP);
@@ -18,6 +43,9 @@ for x = 1:nAcq
     Fs = rawFs/dsRate;
     refSig = data.acq(x).refSig;
     data.final(x).FP = cell(nFP,1); data.final(x).nbFP = cell(nFP,1); data.final(x).FPbaseline = cell(nFP,1);
+    %The for loop will go through all FP traces assuming all of them were
+    %recorded using an isosbestic control. The user will need to input the
+    %modulation frequencies for excitation and isosbestic
     for y = 1:nFP
         rawFP = data.acq(x).FP{y,1};
         modFreq = inputdlg({['Enter Isosbestic Mod Freq for: ',FPnames{y}],['Enter Excitation Mod Freq for: ',FPnames{y}]});
@@ -32,6 +60,8 @@ for x = 1:nAcq
         excDemod = downsample(excDemod,dsRate); isoDemod = downsample(isoDemod,dsRate);
         data.final(x).nbFP{y} = excDemod;
         data.final(x).iso{y} = isoDemod;
+        %This code will also ask the user if they will want to use the
+        %isosbestic signal to baseline the signal using linear regression
         baseOption = menu('Do you want to use the Isosbestic for Baselining?','Yes','No');
         if baseOption == 1 || baseOption == 0
             [FP,baseline] = linregFP(isoDemod,excDemod,basePrc);
@@ -41,26 +71,14 @@ for x = 1:nAcq
         data.final(x).FP{y} = FP;
         data.final(x).FPbaseline{y} = baseline;
     end
-    L = L/dsRate; timeVec = [1:L]/Fs;
+    %Create the time vector based on the new length of the photometry
+    %signal and store new photometry signal
+    if sigEdge ~= 0
+        L = L((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
+        Ls = length(L);
+    end
+    Ls = Ls/dsRate; timeVec = [1:Ls]/Fs;
     data.final(x).time = timeVec';
     data.final(x).Fs = Fs;
-    if sigEdge ~= 0
-        wheel = data.acq(x).wheel;
-        wheel = wheel((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
-        data.acq(x).wheel = wheel;
-    end
 end
-end
-
-function [ref] = findRef(modFreq,refSig,Fs)
-
-for n = 1:length(refSig)
-    tmpRef = refSig{n};
-    [refMag,refFreq] = calcFFT(tmpRef-mean(tmpRef),Fs);
-    maxRefFreq = refFreq(find(refMag == max(refMag)));
-    if modFreq >= (maxRefFreq-5) && modFreq <= (maxRefFreq+5)
-        ref = tmpRef;
-    end
-end
-
 end

@@ -1,45 +1,39 @@
 %% Process Parameters for Photometry Analysis
 %Created By: Pratik Mistry
 %Created On: 31 January 2019
-%Edited On: 12 June 2019
+%Edited On: 26 September 2019
 %
 %Description: This is a script with different variables whose values can be
 %adjusted depending on the photometry signal that is being processed. The
 %name of this file can and should be changed depending on the method and
-%GECI used.
+%GECI used. Please read comments associated with variable
 %
 %
-%% Select Data to Analyze
-%params.statusFP = 1;
-%params.statusWheel = 1;
-%params.statusOnsets = 1;
-%params.statusOpto = 1;
-%params.statusCC = 1;
 %% General Parameters
 params.dsRate = 50; % Downsampling rate if you want to downsample the signal
 %This dsRate will also be applied to all signals during the analysis
 %pipeline
 %dsRate = 1 if you do not want to downsample
 
-%% Demodulation Parameters
-%Adjust the variable to "0" if it's a normal photometry recording
-params.FP.sigEdge = 0; %Time in seconds of data to be removed from beginning and end of signal
-%The params.sigEdge variable is necessary because it will remove filter
-%edge effects that occur during the demodulation
-
 %% Filter Parameters
-%params.filtType = 'lowpass'; % Filter type: 'lowpass' or 'highpass' --
-%Temporarily removed. We more than likely won't need to highpass filter our
-%signals
 params.FP.lpCut = 10; % Cut-off frequency for filter
 params.FP.filtOrder = 8; % Order of the filter
 
 %% Baseline Parameters
 params.FP.basePrc = 10; % Percentile value from 1 - 100 to use when finding baseline points
+%Note: Lower percentiles are used because the mean of signal is not true
+%baseline
 params.FP.winSize = 10; % Window size for baselining in seconds
 params.FP.winOv = 0; %Window overlap size in seconds
 params.FP.interpType = 'linear'; % 'linear' 'spline' 
 params.FP.fitType = 'exp'; % Fit method 'interp' , 'exp' , 'line'
+
+%% Demodulation Parameters
+%When demodulating signals, the filter creates edge artifacts. We record
+%for a few seconds longer, so we can remove x seconds from the beginning
+%and end
+%Adjust the variable to "0" if it's a normal photometry recording
+params.FP.sigEdge = 0; %Time in seconds of data to be removed from beginning and end of signal
 
 %% Behavior Parameters Parameters
 %Wheel Parameters

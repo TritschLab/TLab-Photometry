@@ -1,6 +1,6 @@
 function [sig,filtStruct] = digitalLIA(modSig,refSig,Fs,lpCut,filtOrder)
 %Digital Lock-In Amplifier Demodulation
-%   
+%
 %   [sig,filtStruct] = digitalLIA(modSig,refSig,Fs,lpCut,filtOrder)
 %
 %   Description: This function demodulates a signal using a phase sensitive
@@ -15,7 +15,7 @@ function [sig,filtStruct] = digitalLIA(modSig,refSig,Fs,lpCut,filtOrder)
 %
 %   Multiplying two sinusoids:
 %
-%   A*sin(w_1*t+phi_1) .* B*sin(w_2*t+phi_2) = 
+%   A*sin(w_1*t+phi_1) .* B*sin(w_2*t+phi_2) =
 %       0.5*A*B*cos((w_1-w_2)*t+(phi_1-phi_2)) -
 %       cos((w_1+w_2)*t+(phi_1+phi_2));
 %
@@ -32,47 +32,47 @@ function [sig,filtStruct] = digitalLIA(modSig,refSig,Fs,lpCut,filtOrder)
 %
 %   Author: Pratik Mistry, 2019
 
-    %Check to see if signals are column vectors; if not, it corrects the
-    %signal orientation to column vectors
-    modSig = sub_chkSigSize(modSig); refSig = sub_chkSigSize(refSig);
-    %Check to see if the signals are the same length because the signal
-    %multiplication requires the signals to be exactly the same length
-    if (size(modSig,1) ~= size(refSig,1))
-        disp('ERROR: Signals are not the same length. Signals need to be the same length for the code to perform phase sensitive detection');
-        sig = 0;
-        return;
-    else
-        %Bandpass filter your modulated signal to ensure that only the
-        %frequency of modulation exists --> This allows for a cleaner
-        %phase-detection
-        %bpFilt = sub_createFilter(modSig,'bandpassiir');
-        %modSig = filtfilt(bpFilt,modSig);
-        %Normalize Reference Signal and ensure the amplitude goes from +2
-        %to -2V --> This step ensures that you are maintaining the original
-        %ampltiude from the modulated photometry signal
-        refSig = refSig-min(refSig); refSig = refSig/max(refSig); refSig = (refSig-0.5)*4;
-        %Check to see if user inputted an in-phase reference signal
-        %Perform a cross-correlation. If maximum correlation exists at 0,
-        %then the signals are in phase.
-        [x,lag] = xcov(modSig,refSig,'coeff');
-        phaseDiff = lag(find(x==max(x))); 
-        %Clear variables to free space
-        clear x lag;
-        lpFilt = designfilt('lowpassiir','FilterOrder',filtOrder,'HalfPowerFrequency',lpCut,'SampleRate',Fs,'DesignMethod','butter');
-        if phaseDiff == 0 %Signals are in-phase perform standard PSD
-            PSD = modSig.*refSig;
-            sig = filtfilt(lpFilt,PSD);
-        else %Signals are not in-phase compute a quadrature using reference signal shift 90 degrees
-            refSig_90 = gradient(refSig);
-            PSD_1 = modSig.*refSig; 
-            PSD_1 = filtfilt(lpFilt,PSD_1);
-            PSD_2 = modSig.*refSig_90; 
-            PSD_2 = filtfilt(lpFilt,PSD_2);
-            sig = hypot(PSD_1,PSD_2);
-        end
-        filtStruct = lpFilt;
+%Check to see if signals are column vectors; if not, it corrects the
+%signal orientation to column vectors
+modSig = sub_chkSigSize(modSig); refSig = sub_chkSigSize(refSig);
+%Check to see if the signals are the same length because the signal
+%multiplication requires the signals to be exactly the same length
+if (size(modSig,1) ~= size(refSig,1))
+    disp('ERROR: Signals are not the same length. Signals need to be the same length for the code to perform phase sensitive detection');
+    sig = 0;
+    return;
+else
+    %Bandpass filter your modulated signal to ensure that only the
+    %frequency of modulation exists --> This allows for a cleaner
+    %phase-detection
+    %bpFilt = sub_createFilter(modSig,'bandpassiir');
+    %modSig = filtfilt(bpFilt,modSig);
+    %Normalize Reference Signal and ensure the amplitude goes from +2
+    %to -2V --> This step ensures that you are maintaining the original
+    %ampltiude from the modulated photometry signal
+    refSig = refSig-min(refSig); refSig = refSig/max(refSig); refSig = (refSig-0.5)*4;
+    %Check to see if user inputted an in-phase reference signal
+    %Perform a cross-correlation. If maximum correlation exists at 0,
+    %then the signals are in phase.
+    [x,lag] = xcov(modSig,refSig,'coeff');
+    phaseDiff = lag(find(x==max(x)));
+    %Clear variables to free space
+    clear x lag;
+    lpFilt = designfilt('lowpassiir','FilterOrder',filtOrder,'HalfPowerFrequency',lpCut,'SampleRate',Fs,'DesignMethod','butter');
+    if phaseDiff == 0 %Signals are in-phase perform standard PSD
+        PSD = modSig.*refSig;
+        sig = filtfilt(lpFilt,PSD);
+    else %Signals are not in-phase compute a quadrature using reference signal shift 90 degrees
+        refSig_90 = gradient(refSig);
+        PSD_1 = modSig.*refSig;
+        PSD_1 = filtfilt(lpFilt,PSD_1);
+        PSD_2 = modSig.*refSig_90;
+        PSD_2 = filtfilt(lpFilt,PSD_2);
+        sig = hypot(PSD_1,PSD_2);
     end
-    
+    filtStruct = lpFilt;
+end
+
 end
 
 function adjSig = sub_chkSigSize(orgSig)
@@ -93,13 +93,13 @@ function adjSig = sub_chkSigSize(orgSig)
 %
 %
 
-    %This function uses the size function to ensure that size(sig,2) = 1
-    %The second index in size is the number of columns
-    if size(orgSig,2) ~= 1
-        adjSig = orgSig';
-    else
-        adjSig = orgSig;
-    end
+%This function uses the size function to ensure that size(sig,2) = 1
+%The second index in size is the number of columns
+if size(orgSig,2) ~= 1
+    adjSig = orgSig';
+else
+    adjSig = orgSig;
+end
 end
 
 %This function is no longer necessary for the analysis, but is being kept

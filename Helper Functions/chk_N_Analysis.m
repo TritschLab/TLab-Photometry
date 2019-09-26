@@ -19,22 +19,22 @@ function [fName] = chk_N_Analysis(data)
 %
 %   Author: Pratik Mistry, 2019
 %
-    n = 0;
-    while(1)
-        if n == 0
-            if isfield(data,'final')
-                n = n+1;
-            else
-                fName = 'final';
-                break
-            end
+n = 0;
+while(1)
+    if n == 0
+        if isfield(data,'final')
+            n = n+1;
         else
-            if (isfield(data,sprintf('final_%d',n)))
-                n = n+1;
-            else
-                fName = sprintf('final_%d',n);
-                break;
-            end
+            fName = 'final';
+            break
+        end
+    else
+        if (isfield(data,sprintf('final_%d',n)))
+            n = n+1;
+        else
+            fName = sprintf('final_%d',n);
+            break;
         end
     end
+end
 end

@@ -22,50 +22,66 @@ function [dF,baseline] = baselineFP(FP,interpType,fitType,basePrc,winSize,winOv,
 %   - dF_F - Baseline adjusted trace (%dF_F)
 %   - varargout - Optional fitline output
 %
+%   Author: Pratik Mistry, 2019
 %
-    if size(FP,1) == 1
-        FP = FP';
+
+%Ensure the FP vector is a column vector instead of row vector --> Faster
+%computation
+if size(FP,1) == 1
+    FP = FP';
+end
+
+winSize = winSize * Fs; %Convert window size from seconds to samples
+winOv = winOv * Fs; %Convert overlap window from seconds to samples
+Ls = length(FP); %Get length of photometry trace
+L = 1:Ls; L = L'; %Create a column vector from 1 to total data points in trace
+nPts = floor(Ls/(winSize-winOv)); %Determine number of baseline points to be found
+
+%X is a vector of positional points in the data that we will be gathering baseline points
+%Y is a vector of zeros that will contain calculated baseline points
+X = L(1:ceil(Ls/nPts):end); Y = zeros(nPts,1);
+
+%Determine the step size of the window:
+%If the overlap is 0 or empty then it will use the window size as the step
+%size. If the overlap is greater than 0 the step size will be the window
+%size subtracted by the overlap size
+if winOv == 0 || isempty(winOv)
+    winStep = winSize;
+else
+    winStep = winSize - winOv;
+end
+
+%The following for loop goes through the photometry vector and finds
+%baseline values of the windowed photometry trace according to a certain
+%percentile
+for n = 0:nPts-1
+    I1 = (n*winStep)+1;
+    I2 = I1 + winSize;
+    if I2>Ls
+        I2 = Ls;
     end
-    
-    winSize = winSize * Fs;
-    winOv = winOv * Fs;
-    Ls = length(FP);
-    L = 1:Ls; L = L';
-    nPts = floor(Ls/(winSize-winOv));
-    
-    X = L(1:ceil(Ls/nPts):end); Y = zeros(nPts,1);
-    
-    if winOv == 0 || isempty(winOv)
-        winStep = winSize;
-    else
-        winStep = winSize - winOv;
-    end
-    
-    for n = 0:nPts-1
-        I1 = (n*winStep)+1;
-        I2 = I1 + winSize;
-        if I2>Ls
-            I2 = Ls;
-        end
-        Y(n+1) = prctile(FP(I1:I2),basePrc);
-    end
-    
-    interpFit = interp1(X,Y,L,interpType,'extrap');
-    
-    switch fitType
-        case 'interp'
-            baseline = interpFit;
-        case 'exp'
-            expFit = fit(L,interpFit,'exp2');
-            baseline = double(expFit(L));
-        case 'line'
-            lineFit = fit(L,interpFit,'poly1');
-            baseline = double(lineFit(L));
-        otherwise
-            
-    end
-            
-    dF = (FP-baseline)./baseline;
-    dF = dF*100;
-    
+    Y(n+1) = prctile(FP(I1:I2),basePrc);
+end
+
+interpFit = interp1(X,Y,L,interpType,'extrap'); %Create an interpolated line using the previously calculated baseline points
+
+
+%The following switch statement will adjust the baseline according to user
+%input
+switch fitType
+    case 'interp'
+        baseline = interpFit; %Use interpolated line
+    case 'exp'
+        expFit = fit(L,interpFit,'exp2'); %Baseline is now an exponential line fit to interpolated line
+        baseline = double(expFit(L));
+    case 'line'
+        lineFit = fit(L,interpFit,'poly1'); %Baseline is a linear fit of the interpolated line
+        baseline = double(lineFit(L));
+    otherwise
+        
+end
+
+dF = (FP-baseline)./baseline;
+dF = dF*100;
+
 end

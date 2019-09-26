@@ -17,22 +17,22 @@ function vel = getVel(rawData,radius,Fs,winSize)
 %   Output:
 %   - vel - Velocity trace
 %
-    circumference = 2*pi*radius;
-    %First two lines normalizes the rotary encoder data to go from 0 - 1.
-    %This is important because the unwrapBeh function, which unwraps the
-    %encoder data into cumulative rotations
-    rawNorm = rawData - min(rawData);
-    rawNorm = rawNorm / max(rawNorm);
-    
-    unwrapped = unwrapBeh(rawNorm); %Unwrap the data using the unwrapBeh function written by Jeff
-    if winSize ~= 0
-        unwrapped = movmean(unwrapped,ceil(Fs*winSize));
-    end
-    unwrapped = unwrapped * circumference;
-    %distance = unwrapped * dia; %Multiply the cumulative rotaions by the circumference to
-    % get distance traveled
-    vel = [diff(unwrapped),(unwrapped(end)-unwrapped(end-1))] * Fs; 
-    vel = medfilt1(vel,ceil(Fs*winSize));
+circumference = 2*pi*radius;
+%First two lines normalizes the rotary encoder data to go from 0 - 1.
+%This is important because the unwrapBeh function, which unwraps the
+%encoder data into cumulative rotations
+rawNorm = rawData - min(rawData);
+rawNorm = rawNorm / max(rawNorm);
+
+unwrapped = unwrapBeh(rawNorm); %Unwrap the data using the unwrapBeh function written by Jeff
+if winSize ~= 0
+    unwrapped = movmean(unwrapped,ceil(Fs*winSize));
+end
+unwrapped = unwrapped * circumference;
+%distance = unwrapped * dia; %Multiply the cumulative rotaions by the circumference to
+% get distance traveled
+vel = [diff(unwrapped),(unwrapped(end)-unwrapped(end-1))] * Fs;
+vel = medfilt1(vel,ceil(Fs*winSize));
 end
 
 function [finalData, flagMatrix] = unwrapBeh(rawData)
@@ -91,8 +91,8 @@ while index <= length(rawData)
         lapCrossings(index) = -1; % Value of -1, signifying backwards lap crossing
         flag = 1;
         
-    % Account for if mouse runs backwards at lapCounter threshold (This was
-    % previously before the other if/elseif statements)
+        % Account for if mouse runs backwards at lapCounter threshold (This was
+        % previously before the other if/elseif statements)
     elseif rawData(index) >= 0.45 && rawData(index) < 0.55
         flag = 1;
     elseif rawData(index) >= 0.35 && rawData(index) < 0.45

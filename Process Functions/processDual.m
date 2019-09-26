@@ -1,58 +1,76 @@
 function [data] = processDual(data,params)
+%Process Dual Color Photometry
+%
+%   [data] = processDual(data,params)
+%
+%   Description: This function is designed to process dual-color or dual-fiber
+%   photometry experiments. These experiments require demodulation, and
+%   this code will find the acquired reference frequency and use that for
+%   demodulation.
+%
+%   Input:
+%   - data - A data structure specific to the Tritsch Lab. Created using
+%   the convertH5_FP script
+%   - params - A structure created from a variant of the processParams
+%   script
+%
+%   Output:
+%   - data - Updated data structure containing processed data
+%
+%   Author: Pratik Mistry 2019
+
+%Pull parameters required for this analysis
 nAcq = length(data.acq);
+%Filter Properties
 lpCut = params.FP.lpCut; filtOrder = params.FP.filtOrder;
-
+%General downsampling parameter
 dsRate = params.dsRate;
-
+%Baselining parameters
 interpType = params.FP.interpType;
 fitType = params.FP.fitType; winSize = params.FP.winSize;
 winOv = params.FP.winOv;
 basePrc = params.FP.basePrc;
+%Demodulation-specific property
 sigEdge = params.FP.sigEdge;
 
+%This outer for-loop goes performs the analysis on each sweep acquired
+%during the experiment
 for x = 1:nAcq
-    L = length(data.acq(x).time);
-    nFP = length(data.acq(x).FP);
-    FPnames = data.acq(x).FPnames;
-    rawFs = data.acq(x).Fs;
-    Fs = rawFs/dsRate;
-    refSig = data.acq(x).refSig;
+    Ls = length(data.acq(x).time); %Get length of data in samples
+    L = 1:Ls;
+    nFP = length(data.acq(x).FP); %Obtain number of FP channels (Includes red control)
+    FPnames = data.acq(x).FPnames; %Pull names of the FP channels
+    rawFs = data.acq(x).Fs; %Extact raw sampling rate
+    Fs = rawFs/dsRate; %Adjust sampling rate according to downsampling factor
+    refSig = data.acq(x).refSig; %Pull reference signals
+    %The following line initializes the cell array for the final photometry
+    %data
     data.final(x).FP = cell(nFP,1); data.final(x).nbFP = cell(nFP,1); data.final(x).FPbaseline = cell(nFP,1);
+    %The following for loop will go through all photometry traces and ask
+    %for the modulation frequency required for demodulation
     for y = 1:nFP
-        rawFP = data.acq(x).FP{y,1};
-        modFreq = inputdlg(['Enter Modulation Frequency for: ',FPnames{y}]);
-        modFreq = str2double(modFreq{1});
-        ref = findRef(modFreq,refSig,rawFs);
-        demod = digitalLIA(rawFP,ref,rawFs,lpCut,filtOrder);
-        if sigEdge ~= 0
+        rawFP = data.acq(x).FP{y,1}; %Extract FP trace
+        modFreq = inputdlg(['Enter Modulation Frequency for: ',FPnames{y}]); %Ask for modulation frequency
+        modFreq = str2double(modFreq{1}); %Convert string input to a double
+        ref = findRef(modFreq,refSig,rawFs); %Find the reference signal from the refsig array using modulation frequency
+        demod = digitalLIA(rawFP,ref,rawFs,lpCut,filtOrder); %Peform the demodulation
+        if sigEdge ~= 0 %Remove the beginning and the edge if the setting isn't 0
             demod = demod((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
         end
-        demod = downsample(demod,dsRate);
-        data.final(x).nbFP{y} = demod;
-        [FP,baseline] = baselineFP(demod,interpType,fitType,basePrc,winSize,winOv,Fs);
+        demod = downsample(demod,dsRate); %Downsample the data
+        data.final(x).nbFP{y} = demod; %Store the demodulated signal in the non-baseline data
+        [FP,baseline] = baselineFP(demod,interpType,fitType,basePrc,winSize,winOv,Fs); %Baseline Photometry
         data.final(x).FP{y} = FP;
         data.final(x).FPbaseline{y} = baseline;
     end
-    L = L/dsRate; timeVec = [1:L]/Fs;
+    %Create the time vector based on the new length of the photometry
+    %signal and store new photometry signal
+    if sigEdge ~= 0
+        L = L((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
+        Ls = length(L);
+    end
+    Ls = Ls/dsRate; timeVec = [1:Ls]/Fs;
     data.final(x).time = timeVec';
     data.final(x).Fs = Fs;
-    if sigEdge ~= 0
-        wheel = data.acq(x).wheel;
-        wheel = wheel((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
-        data.acq(x).wheel = wheel;
-    end
 end
-end
-
-function [ref] = findRef(modFreq,refSig,Fs)
-
-for n = 1:length(refSig)
-    tmpRef = refSig{n};
-    [refMag,refFreq] = calcFFT(tmpRef-mean(tmpRef),Fs);
-    maxRefFreq = refFreq(find(refMag == max(refMag)));
-    if modFreq >= (maxRefFreq-5) && modFreq <= (maxRefFreq+5)
-        ref = tmpRef;
-    end
-end
-
 end

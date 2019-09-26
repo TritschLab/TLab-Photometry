@@ -18,15 +18,26 @@ function data = processBeh(data,params)
 %   - data - Updated data structure containing processed data
 %
 %   Author: Pratik Mistry 2019
+
+%Pull parameters from the params structure
 radius = params.beh.radius; velThres = params.beh.velThres;
 winSize = params.beh.winSize;
 finalOnset = params.beh.finalOnset;
 nAcq = length(data.acq);
+sigEdge = params.FP.sigEdge;
 dsRate = params.dsRate;
+
+%The following for-loop will run the behavior analysis on each sweep in the
+%acquisition
 for n = 1:nAcq
     wheel = data.acq(n).wheel;
     rawFs = data.acq(n).Fs;
     Fs = rawFs/dsRate;
+    if sigEdge ~= 0
+        wheel = data.acq(x).wheel;
+        wheel = wheel((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
+        data.acq(x).wheel = wheel;
+    end
     wheel = downsample(wheel,params.dsRate);
     data.final(n).wheel = wheel;
     data.final(n).Fs = Fs;

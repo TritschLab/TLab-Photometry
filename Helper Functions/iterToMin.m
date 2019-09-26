@@ -8,19 +8,19 @@ function [localMinsFinal] = iterToMin(signal, array, threshold, isOnset)
 % Inputs:
 %
 % 'signal' - the signal in which we are looking for minimums
-% 
+%
 % 'array' - the indices of the starting points
 %
 % 'threshold' - the minimum to iterate toward
 %
-% 'isOnset' - if 'true', the iteration goes left, if 'false', the 
+% 'isOnset' - if 'true', the iteration goes left, if 'false', the
 % iteration goes right (this is a holdover from using this code for
 % onsets and offsets of mouse movement bouts)
-% 
+%
 % Outputs:
 %
 % 'localMinsFinal' - an array of the new local minimums, iterated towards
-% from the initial 'array' 
+% from the initial 'array'
 %
 % Author: Jeffrey March, 2018
 
@@ -34,7 +34,7 @@ for i = 1:length(array)
         threshInd = 1;
     end
     
-    % Iterating towards the local minimum (direction depends on isOnset)   
+    % Iterating towards the local minimum (direction depends on isOnset)
     while signal(localMin) > threshold(threshInd)
         localMin = localMin - (isOnset*2 - 1);
         

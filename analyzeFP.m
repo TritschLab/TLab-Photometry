@@ -1,3 +1,18 @@
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%ANALYZE FIBER PHOTOMETRY - TRITSCH LAB
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%
+% Description: This code processes photometry experiments. First, the user
+% will select as many photometry experiments they want to analyze. Then the
+% code will ask the user to upload a single parameter file to use. Finally,
+% a window will pop-up asking the user which analyzes to perform. These
+% options are also multi-select using "CTRL" + Click or "SHIFT" + Arrows
+%
+%
+% Author: Pratik Mistry, 2019
+
+%% Run Analysis
+
 clear all;
 [FPfiles,FPpath] = uigetfile('*.mat','Select FP Files to Analyze','MultiSelect','On');
 if FPfiles == 0
