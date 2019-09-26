@@ -26,7 +26,7 @@ params.FP.basePrc = 10; % Percentile value from 1 - 100 to use when finding base
 params.FP.winSize = 10; % Window size for baselining in seconds
 params.FP.winOv = 0; %Window overlap size in seconds
 params.FP.interpType = 'linear'; % 'linear' 'spline' 
-params.FP.fitType = 'exp'; % Fit method 'interp' , 'exp' , 'line'
+params.FP.fitType = 'line'; % Fit method 'interp' , 'exp' , 'line'
 
 %% Demodulation Parameters
 %When demodulating signals, the filter creates edge artifacts. We record
@@ -74,5 +74,3 @@ params.cc.type = 1; % 1 = Cross-Correlation 2 - Cross-Covariance
 %       %arduino(for in vivo): 4V
 %       %wavesurfer(photometry): 0.15V
 params.opto.threshold = 4; 
-%params.opto.dsRate = 40;
-%% Frequency Analysis Parameters
