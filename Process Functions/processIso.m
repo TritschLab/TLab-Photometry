@@ -36,7 +36,8 @@ sigEdge = params.FP.sigEdge;
 %This outer for-loop goes performs the analysis on each sweep acquired
 %during the experiment
 for x = 1:nAcq
-    L = length(data.acq(x).time);
+    Ls = length(data.acq(x).time);
+    L = 1:Ls;
     nFP = length(data.acq(x).FP);
     FPnames = data.acq(x).FPnames;
     rawFs = data.acq(x).Fs;
