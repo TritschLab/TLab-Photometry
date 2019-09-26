@@ -45,6 +45,10 @@ for n = 1:nAcq
     minRest = params.beh.minRestTime * Fs; minRun = params.beh.minRunTime * Fs;
     [onsets,offsets] = getOnsetOffset(abs(vel),velThres,minRest,minRun,finalOnset);
     data.final(n).vel = vel';
+    if ~isfield(data.final(n),'time')
+        timeVec = [1:length(vel)];
+        data.final(n).time = timeVec'/Fs;
+    end        
     data.final(n).beh.onsets = onsets;
     data.final(n).beh.offsets = offsets;
 end
