@@ -34,9 +34,9 @@ for n = 1:nAcq
     rawFs = data.acq(n).Fs;
     Fs = rawFs/dsRate;
     if sigEdge ~= 0
-        wheel = data.acq(x).wheel;
+        wheel = data.acq(n).wheel;
         wheel = wheel((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
-        data.acq(x).wheel = wheel;
+        data.acq(n).wheel = wheel;
     end
     wheel = downsample(wheel,params.dsRate);
     data.final(n).wheel = wheel;
