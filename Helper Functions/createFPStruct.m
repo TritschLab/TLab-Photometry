@@ -25,18 +25,25 @@ nSweeps = length(wsData.sweeps);
 Ls = wsData.header.ExpectedSweepScanCount;
 %The following for-loop will go through all the sweeps and organize the
 %data within each sweep depending on the trace name
+traceNames = wsData.sweeps(1).traceNames;
+nTraces = length(traceNames);
+traceType = zeros(nTraces,1);
+for x = 1:nTraces
+    tName = traceNames{x};
+    tName(find(tName==' ')) = [];
+    traceNames{x} = tName;
+    %Following line asks the user to select the type for the trace
+    choice = menu(['Select an option for trace: ',tName],'Photometry','Reference',...
+        'Wheel Encoder','Opto Pulses');
+    traceType(x) = choice;
+end
 for sweepNum = 1:nSweeps
     data.acq(sweepNum).Fs = wsData.header.AcquisitionSampleRate; %Pull Sampling Rate
     data.acq(sweepNum).startTime = wsData.header.ClockAtRunStart; %Pull time at start
-    tmpTraceNames = wsData.sweeps(sweepNum).traceNames; %Pull cell of trace names
-    nTraces = length(tmpTraceNames);
     FPind = 1; RefInd = 1; %Need to initialize index for FP and Ref sigs because there may be multiple
     for n = 1:nTraces
-        tName = tmpTraceNames{n};
-        tName(find(tName==' ')) = [];
         %Following line asks the user to select the type for the trace
-        choice = menu(['Select an option for trace: ',tName],'Photometry','Reference',...
-            'Wheel Encoder','Opto Pulses');
+        choice = traceType(n);
         %The switch statement will organize the traces into specific fields
         %in the new data structure depending on user input
         switch choice

@@ -10,7 +10,7 @@
 %
 %
 %% General Parameters
-params.dsRate = 40; % Downsampling rate if you want to downsample the signal
+params.dsRate = 1; % Downsampling rate if you want to downsample the signal
 %This dsRate will also be applied to all signals during the analysis
 %pipeline
 %dsRate = 1 if you do not want to downsample
