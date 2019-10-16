@@ -58,7 +58,7 @@ for x = 1:nAcq
             isoDemod = isoDemod((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
             excDemod = excDemod((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
         end
-        excDemod = downsample(excDemod,dsRate); isoDemod = downsample(isoDemod,dsRate);
+        excDemod = excDemod(1:dsRate:end); isoDemod = isoDemod(1:dsRate:end);
         data.final(x).nbFP{y} = excDemod;
         data.final(x).iso{y} = isoDemod;
         %This code will also ask the user if they will want to use the

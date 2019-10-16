@@ -10,7 +10,7 @@
 %
 %
 %% General Parameters
-params.dsRate = 50; % Downsampling rate if you want to downsample the signal
+params.dsRate = 40; % Downsampling rate if you want to downsample the signal
 %This dsRate will also be applied to all signals during the analysis
 %pipeline
 %dsRate = 1 if you do not want to downsample
@@ -33,7 +33,7 @@ params.FP.fitType = 'line'; % Fit method 'interp' , 'exp' , 'line'
 %for a few seconds longer, so we can remove x seconds from the beginning
 %and end
 %Adjust the variable to "0" if it's a normal photometry recording
-params.FP.sigEdge = 30; %Time in seconds of data to be removed from beginning and end of signal
+params.FP.sigEdge = 0; %Time in seconds of data to be removed from beginning and end of signal
 
 %% Behavior Parameters Parameters
 %Wheel Parameters

@@ -20,7 +20,7 @@ function data = processBeh(data,params)
 %   Author: Pratik Mistry 2019
 
 %Pull parameters from the params structure
-radius = params.beh.radius; velThres = params.beh.velThres;
+circum = 2*pi*params.beh.radius; velThres = params.beh.velThres;
 winSize = params.beh.winSize;
 finalOnset = params.beh.finalOnset;
 nAcq = length(data.acq);
@@ -32,16 +32,19 @@ dsRate = params.dsRate;
 for n = 1:nAcq
     wheel = data.acq(n).wheel;
     rawFs = data.acq(n).Fs;
-    Fs = rawFs/dsRate;
+    Fs = rawFs/dsRate; data.final(n).Fs = Fs;
     if sigEdge ~= 0
         wheel = data.acq(n).wheel;
         wheel = wheel((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
         data.acq(n).wheel = wheel;
     end
-    wheel = downsample(wheel,params.dsRate);
+    wheel = unwrapBeh(wheel);
+    lpFilt = designfilt('lowpassiir','SampleRate',rawFs,'FilterOrder',10,'HalfPowerFrequency',10);
+    wheel = filtfilt(lpFilt,wheel);
+    wheel = wheel(1:dsRate:end);
+    wheel = wheel*circum;
     data.final(n).wheel = wheel;
-    data.final(n).Fs = Fs;
-    vel = getVel(wheel,radius,Fs,winSize);
+    vel = getVel(wheel,Fs,winSize);
     minRest = params.beh.minRestTime * Fs; minRun = params.beh.minRunTime * Fs;
     [onsets,offsets] = getOnsetOffset(abs(vel),velThres,minRest,minRun,finalOnset);
     data.final(n).vel = vel';
