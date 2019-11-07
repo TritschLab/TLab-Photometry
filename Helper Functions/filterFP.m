@@ -1,4 +1,4 @@
-function [cleanSignal,filt,varargout] = filterFP(rawSignal,sampleRate,cutoff,order,filtType,varargin)
+function [cleanSignal,filt] = filterFP(rawSignal,sampleRate,cutoff,order,filtType)
 %filterFP - Filter raw photometry signals
 %   Created By: Pratik Mistry
 %   Created On: 24 August 2018
@@ -28,8 +28,7 @@ function [cleanSignal,filt,varargout] = filterFP(rawSignal,sampleRate,cutoff,ord
 %   Output:
 %   cleanSignal = filtered signal
 %   filt = filter object to present filter/system properties
-%   adjustedSamplingRate = Optional output if they user decides to
-%   downsample the signal
+% 
 
 switch filtType
     case 'lowpass'
@@ -40,8 +39,4 @@ switch filtType
         %fvtool(filt);
 end
 cleanSignal=filtfilt(filt,rawSignal);
-if nargin == 6
-    cleanSignal=downsample(cleanSignal,varargin{1});
-    varargout{1}=sampleRate/varargin{1};
-end
 end
