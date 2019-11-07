@@ -25,6 +25,7 @@ nAcq = length(data.acq);
 lpCut = params.FP.lpCut; filtOrder = params.FP.filtOrder;
 %General downsampling parameter
 dsRate = params.dsRate;
+dsType = params.dsType;
 %Baselining parameters
 interpType = params.FP.interpType;
 fitType = params.FP.fitType; winSize = params.FP.winSize;
@@ -57,7 +58,7 @@ for x = 1:nAcq
         if sigEdge ~= 0 %Remove the beginning and the edge if the setting isn't 0
             demod = demod((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
         end
-        demod = demod(1:dsRate:end); %Downsample the data
+        demod = downsample_TLab(demod,dsRate,dsType); %Downsample the data
         data.final(x).nbFP{y} = demod; %Store the demodulated signal in the non-baseline data
         [FP,baseline] = baselineFP(demod,interpType,fitType,basePrc,winSize,winOv,Fs); %Baseline Photometry
         data.final(x).FP{y} = FP;

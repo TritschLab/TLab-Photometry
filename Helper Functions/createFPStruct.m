@@ -22,7 +22,6 @@ function [data] = createFPStruct(wsData,animalName,expDate)
 data = initDS; %Intialize data structure
 data.mouse = animalName; data.date = expDate; %Add mouse name and experiment date to structure
 nSweeps = length(wsData.sweeps);
-Ls = wsData.header.ExpectedSweepScanCount;
 %The following for-loop will go through all the sweeps and organize the
 %data within each sweep depending on the trace name
 traceNames = wsData.sweeps(1).traceNames;
@@ -38,6 +37,7 @@ for x = 1:nTraces
     traceType(x) = choice;
 end
 for sweepNum = 1:nSweeps
+    Ls = wsData.sweeps(sweepNum).acqData(:,1);
     data.acq(sweepNum).Fs = wsData.header.AcquisitionSampleRate; %Pull Sampling Rate
     data.acq(sweepNum).startTime = wsData.header.ClockAtRunStart; %Pull time at start
     FPind = 1; RefInd = 1; %Need to initialize index for FP and Ref sigs because there may be multiple

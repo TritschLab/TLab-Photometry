@@ -38,14 +38,12 @@ for n = 1:nAcq
     data.final(n).FP = cell(nFP,1);
     data.final(n).nbFP = cell(nFP,1);
     data.final(n).FPbaseline = cell(nFP,1);
-    if dsRate ~= 0
-        Fs = rawFs/dsRate;
-        L = L/dsRate;
-    end    
+    Fs = rawFs/dsRate;
+    L = L/dsRate;
     for x = 1:nFP
         rawFP = data.acq(n).FP{x};
         nbFP = filterFP(rawFP,rawFs,lpCut,filtOrder,'lowpass');
-        nbFP = nbFP(1:dsRate:end);
+        nbFP = downsample_TLab(nbFP,dsRate,dsType);
         [FP,baseline] = baselineFP(nbFP,interpType,fitType,basePrc,winSize,winOv,Fs);
         data.final(n).FP{x} = FP;
         data.final(n).nbFP{x} = nbFP;

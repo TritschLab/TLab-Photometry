@@ -26,6 +26,7 @@ finalOnset = params.beh.finalOnset;
 nAcq = length(data.acq);
 sigEdge = params.FP.sigEdge;
 dsRate = params.dsRate;
+dsType = params.dsType;
 
 %The following for-loop will run the behavior analysis on each sweep in the
 %acquisition
@@ -41,7 +42,7 @@ for n = 1:nAcq
     wheel = unwrapBeh(wheel);
     lpFilt = designfilt('lowpassiir','SampleRate',rawFs,'FilterOrder',10,'HalfPowerFrequency',10);
     wheel = filtfilt(lpFilt,wheel);
-    wheel = wheel(1:dsRate:end);
+    wheel = downsample_TLab(wheel,dsRate,dsType);
     wheel = wheel*circum;
     data.final(n).wheel = wheel;
     vel = getVel(wheel,Fs,winSize);
