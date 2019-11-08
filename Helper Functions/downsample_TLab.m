@@ -27,17 +27,17 @@ switch dsType
     case 1
         for n = 1:L_new
             if n == L_new
-                dsData(n) = sum(rawData((n-1)*binSize+1:end));
+                dsData(n) = sum(rawData((n-1)*dsRate+1:end));
             else
-                dsData(n) = sum(rawData((n-1)*binSize+1:n*binSize));
+                dsData(n) = sum(rawData((n-1)*dsRate+1:n*dsRate));
             end
         end
     case 2
         for n = 1:L_new
             if n == L_new
-                dsData(n) = sum(rawData((n-1)*binSize+1:end));
+                dsData(n) = sum(rawData((n-1)*dsRate+1:end));
             else
-                dsData(n) = sum(rawData((n-1)*binSize+1:n*binSize));
+                dsData(n) = sum(rawData((n-1)*dsRate+1:n*dsRate));
             end
         end
     case 3
