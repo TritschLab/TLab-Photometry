@@ -1,4 +1,4 @@
-function dsData = downsample_TLab(rawData,dsRate,dsType)
+function dsData = downsampleTLab(rawData,dsRate,dsType)
 % Tritsch Lab Downsample Data
 %
 %   dsData = downsample_TLab(rawData,dsRate,dsType)
