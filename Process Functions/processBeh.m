@@ -45,7 +45,7 @@ for n = 1:nAcq
     end
     lpFilt = designfilt('lowpassiir','SampleRate',rawFs,'FilterOrder',10,'HalfPowerFrequency',10);
     wheel = filtfilt(lpFilt,wheel);
-    wheel = downsample_TLab(wheel,dsRate,dsType);
+    wheel = downsampleTLab(wheel,dsRate,dsType);
     wheel = wheel*circum;
     data.final(n).wheel = wheel;
     vel = getVel(wheel,Fs,winSize);

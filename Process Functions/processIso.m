@@ -25,6 +25,7 @@ nAcq = length(data.acq);
 lpCut = params.FP.lpCut; filtOrder = params.FP.filtOrder;
 %General downsampling parameter
 dsRate = params.dsRate;
+dsType = params.dsType;
 %Baselining parameters
 interpType = params.FP.interpType;
 fitType = params.FP.fitType; winSize = params.FP.winSize;
@@ -58,7 +59,7 @@ for x = 1:nAcq
             isoDemod = isoDemod((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
             excDemod = excDemod((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
         end
-        excDemod = downsample_TLab(excDemod,dsRate,dsType); isoDemod = downsample_TLab(isoDemod,dsRate,dsType)
+        excDemod = downsampleTLab(excDemod,dsRate,dsType); isoDemod = downsampleTLab(isoDemod,dsRate,dsType);
         data.final(x).nbFP{y} = excDemod;
         data.final(x).iso{y} = isoDemod;
         %This code will also ask the user if they will want to use the

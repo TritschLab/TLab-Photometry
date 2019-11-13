@@ -58,7 +58,7 @@ for x = 1:nAcq
         if sigEdge ~= 0 %Remove the beginning and the edge if the setting isn't 0
             demod = demod((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
         end
-        demod = downsample_TLab(demod,dsRate,dsType); %Downsample the data
+        demod = downsampleTLab(demod,dsRate,dsType); %Downsample the data
         data.final(x).nbFP{y} = demod; %Store the demodulated signal in the non-baseline data
         [FP,baseline] = baselineFP(demod,interpType,fitType,basePrc,winSize,winOv,Fs); %Baseline Photometry
         data.final(x).FP{y} = FP;

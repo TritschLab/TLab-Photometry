@@ -25,6 +25,7 @@ nAcq = length(data.acq);
 lpCut = params.FP.lpCut; filtOrder = params.FP.filtOrder;
 
 dsRate = params.dsRate;
+dsType = params.dsType;
 
 interpType = params.FP.interpType;
 fitType = params.FP.fitType; winSize = params.FP.winSize;
@@ -43,7 +44,7 @@ for n = 1:nAcq
     for x = 1:nFP
         rawFP = data.acq(n).FP{x};
         nbFP = filterFP(rawFP,rawFs,lpCut,filtOrder,'lowpass');
-        nbFP = downsample_TLab(nbFP,dsRate,dsType);
+        nbFP = downsampleTLab(nbFP,dsRate,dsType);
         [FP,baseline] = baselineFP(nbFP,interpType,fitType,basePrc,winSize,winOv,Fs);
         data.final(n).FP{x} = FP;
         data.final(n).nbFP{x} = nbFP;
