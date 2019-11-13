@@ -40,6 +40,9 @@ for n = 1:nAcq
         data.acq(n).wheel = wheel;
     end
     wheel = unwrapBeh(wheel);
+    if size(wheel,1) == 1
+        wheel = wheel';
+    end
     lpFilt = designfilt('lowpassiir','SampleRate',rawFs,'FilterOrder',10,'HalfPowerFrequency',10);
     wheel = filtfilt(lpFilt,wheel);
     wheel = downsample_TLab(wheel,dsRate,dsType);

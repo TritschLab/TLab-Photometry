@@ -22,7 +22,7 @@ function dsData = downsample_TLab(rawData,dsRate,dsType)
 
 L = length(rawData);
 L_new = L/dsRate;
-dsData = zerso(L_new,1);
+dsData = zeros(L_new,1);
 switch dsType
     case 1
         for n = 1:L_new
