@@ -33,14 +33,14 @@ function [onsetsFinal, offsetsFinal] = getOnsetOffset(signal, ampThreshold, minB
 % Author: Jeffrey March, 2018
 
 aboveThresh = find(signal >= ampThreshold);
-onsets = cat(2,aboveThresh(1),aboveThresh(find(diff(aboveThresh) > minBelowTime) + 1));
-offsets = cat(2,aboveThresh(find(diff(aboveThresh) > minBelowTime)),aboveThresh(end));
+onsets = cat(1,aboveThresh(1),aboveThresh(find(diff(aboveThresh) > minBelowTime) + 1));
+offsets = cat(1,aboveThresh(find(diff(aboveThresh) > minBelowTime)),aboveThresh(end));
 if behFlag == true
     onsets = onsets(1:length(offsets));
 end
 if behFlag == false
     if length(offsets) < length(onsets)
-        offsets = cat(2,offsets,aboveThresh(end));
+        offsets = cat(1,offsets,aboveThresh(end));
     end
 end
 offsetsFinal = offsets((offsets - onsets) > minAboveTime);
