@@ -51,7 +51,7 @@ for n = 1:nAcq
     vel = getVel(wheel,Fs,winSize);
     minRest = params.beh.minRestTime * Fs; minRun = params.beh.minRunTime * Fs;
     [onsets,offsets] = getOnsetOffset(abs(vel),velThres,minRest,minRun,finalOnset);
-    data.final(n).vel = vel';
+    data.final(n).vel = vel;
     if ~isfield(data.final(n),'time')
         timeVec = [1:length(vel)];
         data.final(n).time = timeVec'/Fs;

@@ -11,7 +11,7 @@
 %
 %% General Parameters
 params.dsType = 1; % 1 = Bin Summing; 2 = Bin Averaging; 3 = Traditional (NOT RECOMMENDED)
-params.dsRate = 1; % Downsampling rate if you want to downsample the signal
+params.dsRate = 40; % Downsampling rate if you want to downsample the signal
 %This dsRate will also be applied to all signals during the analysis
 %pipeline
 %dsRate = 1 if you do not want to downsample
@@ -24,7 +24,7 @@ params.FP.filtOrder = 8; % Order of the filter
 params.FP.basePrc = 10; % Percentile value from 1 - 100 to use when finding baseline points
 %Note: Lower percentiles are used because the mean of signal is not true
 %baseline
-params.FP.winSize = 10; % Window size for baselining in seconds
+params.FP.winSize = 20; % Window size for baselining in seconds
 params.FP.winOv = 0; %Window overlap size in seconds
 params.FP.interpType = 'linear'; % 'linear' 'spline' 
 params.FP.fitType = 'line'; % Fit method 'interp' , 'exp' , 'line'
@@ -42,7 +42,7 @@ params.beh.radius = 9.8; %Radius of the wheel used. Note it can be meters or cen
 params.beh.winSize = 0.5; %This is the window size for the moving avg filter applied to unwrapped encoder data 500ms windows work well
 %Onset/Offset Parameters
 %Movement Onset and Offset Parameters
-params.beh.velThres = 2; %(same units as radius)/s
+params.beh.velThres = 0.5; %(same units as radius)/s
 params.beh.minRunTime = 2; %Threshold for minimum time spent running for movement bouts (in seconds)
 params.beh.minRestTime = 2; %Threshold for minimum time spent rest for movement bout (in seconds)
 params.beh.finalOnset = 0; %Boolean value -- Decides if you want to include or exlcude the final 
