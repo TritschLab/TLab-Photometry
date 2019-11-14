@@ -18,7 +18,7 @@ function vel = getVel(distTravel,Fs,winSize)
 %
 
 if size(distTravel,1) == 1
-    distTravel = disTravel';
+    distTravel = distTravel';
 end
 
 if winSize ~= 0

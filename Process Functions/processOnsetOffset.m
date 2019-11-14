@@ -22,13 +22,17 @@ function data = processOnsetOffset(data,params)
     nAcq = length(data.acq);
     iterSTD = params.beh.iterSTD;
     iterWin = params.beh.iterWin;
+    velThres = params.beh.velThres;
+    finalOnset = params.beh.finalOnset;
     for n = 1:nAcq
         Fs = data.final(n).Fs;
         timeAfter = params.beh.timeAfter * Fs; %Get time after in samples
         timeBefore = params.beh.timeBefore * Fs; %Get time before in samples
         timeThres = params.beh.timeThres * Fs; %Get time threshold in samples
         vel = data.final(n).vel; vel = abs(vel); %Get absolute value of velocity
-        onSetsInd = data.final(n).beh.onsets; offSetsInd = data.final(n).beh.offsets;
+        minRest = params.beh.minRestTime * Fs; minRun = params.beh.minRunTime * Fs;
+        [onSetsInd,offSetsInd] = getOnsetOffset(abs(vel),velThres,minRest,minRun,finalOnset);
+        %onSetsInd = data.final(n).beh.onsets; offSetsInd = data.final(n).beh.offsets;
         %Adjust onset and offset according to time threshold
         [onSetsInd,offSetsInd] = adjOnsetOffset(onSetsInd,offSetsInd,timeThres,vel);
         %The following two lines will find proper onset and offset
