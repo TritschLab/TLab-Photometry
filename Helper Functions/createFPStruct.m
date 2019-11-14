@@ -37,7 +37,7 @@ for x = 1:nTraces
     traceType(x) = choice;
 end
 for sweepNum = 1:nSweeps
-    Ls = wsData.sweeps(sweepNum).acqData(:,1);
+    Ls = size(wsData.sweeps(sweepNum).acqData,1);
     data.acq(sweepNum).Fs = wsData.header.AcquisitionSampleRate; %Pull Sampling Rate
     data.acq(sweepNum).startTime = wsData.header.ClockAtRunStart; %Pull time at start
     FPind = 1; RefInd = 1; %Need to initialize index for FP and Ref sigs because there may be multiple
