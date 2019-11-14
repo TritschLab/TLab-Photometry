@@ -15,7 +15,7 @@
 
 clear all;
 [FPfiles,FPpath] = uigetfile('*.mat','Select FP Files to Analyze','MultiSelect','On');
-if ismepty(FPfiles)
+if isempty(FPfiles)
     errordlg('No Photometry File Selected!');
 else
     [paramFile,paramPath] = uigetfile('*.m','Select FP Parameters File','MultiSelect','On');
