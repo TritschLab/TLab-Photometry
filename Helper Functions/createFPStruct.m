@@ -49,11 +49,11 @@ for sweepNum = 1:nSweeps
         switch choice
             case 1
                 data.acq(sweepNum).FP{FPind,1} = wsData.sweeps(sweepNum).acqData(:,n);
-                data.acq(sweepNum).FPnames{FPind,1} = tName;
+                data.acq(sweepNum).FPnames{FPind,1} = traceNames{n};
                 FPind = FPind+1;
             case 2
                 data.acq(sweepNum).refSig{RefInd,1} = wsData.sweeps(sweepNum).acqData(:,n);
-                data.acq(sweepNum).refSigNames{RefInd,1} = tName;
+                data.acq(sweepNum).refSigNames{RefInd,1} = traceNames{n};
                 RefInd = RefInd+1;
             case 3
                 data.acq(sweepNum).wheel = wsData.sweeps(sweepNum).acqData(:,n);
