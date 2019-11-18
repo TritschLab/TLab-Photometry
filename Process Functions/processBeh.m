@@ -37,7 +37,6 @@ for n = 1:nAcq
     if sigEdge ~= 0
         wheel = data.acq(n).wheel;
         wheel = wheel((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
-        data.acq(n).wheel = wheel;
     end
     wheel = unwrapBeh(wheel);
     if size(wheel,1) == 1
