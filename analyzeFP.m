@@ -35,7 +35,11 @@ else
         else
             for x = 1:nFiles
                 load(fullfile(FPpath,FPfiles{x}));
-                data.params = params;
+                tmpData = data;
+                if (isfield(tmpData,'final'))
+                    tmpData.final = [];
+                end
+                tmpData.final.params = params;
                 for y = 1:length(analysisOpt)
                     choice = analysisOpt(y);
                     switch choice
@@ -45,43 +49,45 @@ else
                                 isoStatus = menu(['Does this experiment: ',FPfiles{y},...
                                     ' contain an Isosbestic Control?'],'Yes','No');
                                 if isoStatus == 1
-                                    data = processIso(data,params);
+                                    tmpData = processIso(tmpData,params);
                                 else
-                                    data = processDual(data,params);
+                                    tmpData = processDual(tmpData,params);
                                 end
                             elseif modStatus == 2
-                                data = processFP(data,params);
+                                tmpData = processFP(tmpData,params);
                             else
                                 errordlg('No Valid Photometry Option Selected');
                             end
                         case 2
-                            data = processBeh(data,params);
+                            tmpData = processBeh(tmpData,params);
                         case 3
                             try
-                                data = processOnsetOffset(data,params);
+                                tmpData = processOnsetOffset(tmpData,params);
                             catch
                                 errordlg(['Error Processing Onset/Offset for file: ',FPfiles{x}]);
                             end
                             try
-                                data = processRestOnsetOffset(data,params);
+                                tmpData = processRestOnsetOffset(tmpData,params);
                             catch
                                 errordlg(['Error Processing Rest Onset/Offset for file: ',FPfiles{x}]);
                             end
                         case 4
                             try
-                                data = processCC(data,params);
+                                tmpData = processCC(tmpData,params);
                             catch
                                 errordlg(['Error Processing Cross Correlation for file: ',FPfiles{x}]);
                             end
                         case 5
                             load(fullfile(FPpath,FPfiles{n}));
                             try
-                                data = processOpto(data,params);
+                                tmpData = processOpto(tmpData,params);
                             catch
                                 errordlg(['Error Processing Optogenetic Pulses for file: ',FPfiles{x}]);
                             end
                     end
                 end
+                fName = chk_N_Analysis(data);
+                data.(fName) = tmpData.final;
                 save(fullfile(FPpath,FPfiles{x}),'data');
             end
             clear all
