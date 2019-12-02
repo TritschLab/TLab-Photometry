@@ -15,8 +15,6 @@ function [data] = processOpto (data, params)
 %   'data'  - data structure containing new data.opto sub-structure
 %
 
-opto = struct; %initialize structure
-
 %pull variables from params:
 thres = params.opto.threshold;      %threshold for pulse onset/offset
 cutoff = params.opto.cutoff;        %filter cutoff freq
@@ -26,6 +24,7 @@ dsRate = params.opto.dsRate;        %downsampling rate
 dsType = params.opto.dsType;
 
 for n = 1:length(data.acq)
+    data.final(n).opto = struct; %initialize structure
     %extract pulse onset and offset times from original signal 
     optoFs = data.acq(n).Fs;
     signal = data.acq(n).opto{1};
@@ -47,13 +46,13 @@ for n = 1:length(data.acq)
     %    end
     %end
 
-    opto(n).on  = pulseOnset; %pulse onset in samples, matching original optoFs
-    opto(n).off = pulseOffset;
-    opto(n).Fs = optoFs;
-    opto(n).params = params.opto;
-    opto(n).vec = optoNew; %downsampled (and filtered) vector 
-    opto(n).vecFs = optoFsNew; %Fs of downsampled/filtered vector
+    data.final(n).opto.on  = pulseOnset; %pulse onset in samples, matching original optoFs
+    data.final(n).opto.off = pulseOffset;
+    data.final(n).opto.Fs = optoFs;
+    data.final(n).opto.params = params.opto;
+    data.final(n).opto.vec = optoNew; %downsampled (and filtered) vector 
+    data.final(n).opto.vecFs = optoFsNew; %Fs of downsampled/filtered vector
 end      
 
-data.opto = opto; %add to data structure
+%data.opto = opto; %add to data structure
 end
