@@ -79,7 +79,7 @@ for x = 1:nAcq
         L = L((sigEdge*rawFs)+1:end-(sigEdge*rawFs));
         Ls = length(L);
     end
-    Ls = Ls/dsRate; timeVec = [1:Ls]/Fs;
+    Ls = length(1:dsRate:Ls); timeVec = [1:Ls]/Fs;
     data.final(x).time = timeVec';
     data.final(x).Fs = Fs;
 end
