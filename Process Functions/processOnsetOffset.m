@@ -132,6 +132,7 @@ mat = struct;
 end
 
 function thresVec = getIterThres(vel,indVec,winSize,Fs,nStd,flag)
+thresVec = zeros(size(indVec));
     if flag == 0
         for n = 1:length(indVec)
             thresVec(n) = nStd*std(vel(indVec(n)-winSize*Fs:indVec(n)));
