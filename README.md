@@ -1,6 +1,6 @@
 # TLab-Photometry
 
-## No Longer Supported to edit bugs
+## No longer being edited
 
 ### Please use the following pipeline: https://github.com/pratikmistry96/Photometry-Pipeline
 
