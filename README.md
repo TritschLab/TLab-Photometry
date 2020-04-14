@@ -1,8 +1,13 @@
 # TLab-Photometry
 
+## No Longer Supported to edit bugs
+
+### Please use the following pipeline: https://github.com/pratikmistry96/Photometry-Pipeline
+
 ******************************
 DISCLAIMER: 
-******************************
+*****************************
+
 This analysis pipeline may still contain some bugs
 The convertH5_FP function works on H5 files acquired using wavesurfer
 The processParams file does NOT include "default" values. Please edit it to cater to your experimental needs.
